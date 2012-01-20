@@ -1,0 +1,7 @@
+{
+  "branch": "master",
+  "repoUrl": "",
+  "npmUpdate": true,
+  "npmPrune": true,
+  "serverScript": "server.js"
+}
