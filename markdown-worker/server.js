@@ -1,6 +1,7 @@
 var connect = require('connect'),
 	sharejs = require('share'),
-	Editor = require('./edit/Editor.js');
+	Editor = require('./edit/Editor.js'),
+	formidable = require('formidable');
 
 var server = connect(
 	connect.favicon(),
@@ -20,9 +21,11 @@ var server = connect(
 			editor.openDocument(docName, server.model, res, next);
 		});
 
-		app.post('/openFile/:docName', function(req, res, next) {
-			var docName;
-			editor.openFile(docName, server.model, res, next);
+		app.post('/openFile', function(req, res, next) {
+			var form = new formidable.IncomingForm();
+			form.parse(req, function(err, fields, files) {
+				editor.openFile(files.openFileInput.path, files.openFileInput.name, server.model, res, next);
+			});
 		});
 
 		app.post('/openBlob/:docName', function(req, res, next) {
@@ -44,25 +47,13 @@ var server = connect(
 
 var options = {
   db: {type: 'none'},
-  auth: function(client, action) {
-		// This auth handler rejects any ops bound for docs starting with 'readonly'.
-    if (action.name === 'submit op' && action.docName.match(/^readonly/)) {
-      action.reject();
-    } else {
-      action.accept();
-    }
-  }
+  port: 8081
 };
-
-console.log("ShareJS example server v" + sharejs.version);
-console.log("Options: ", options);
-
-var port = 8081;
 
 sharejs.server.attach(server, options);
 
-server.listen(port);
-console.log("Demos running at http://localhost:" + port);
+server.listen(options.port);
+console.log("Demos running at http://localhost:" + options.port);
 
 process.title = 'markdownr'
 process.on('uncaughtException', function (err) {

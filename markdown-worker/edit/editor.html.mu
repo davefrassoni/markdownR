@@ -9,33 +9,23 @@
   </head>
 
   <body>
-  <div id="modal-open" class="modal hide fade">
-    <div class="modal-header">
-      <a href="#" class="close">&times;</a>
-      <h3>Open File</h3>
-    </div>
-    <div class="modal-body">
-      <p>Open from File System</p>
-      <input id="openFileInput" name="openFileInput" type="file" />
-    </div>
-    <div class="modal-footer">
-      <button id="openFileButton" class="btn primary">Ok</button>
-      <button id="closeFileButton" class="btn secondary">Close</button>
-    </div>
-  </div>
-    <div id="modal-save" class="modal hide fade">
-    <div class="modal-header">
-      <a href="#" class="close">&times;</a>
-      <h3>Save File</h3>
-    </div>
-    <div class="modal-body">
-      <p>Saving File...</p>
-    </div>
-    <div class="modal-footer">
-      <button id="openSaveButton" class="btn primary">Ok</button>
-      <button id="closeSaveButton" class="btn secondary">Cancel</button>
-    </div>
-  </div>
+	  <div id="modal-open" class="modal hide fade">
+		<div class="modal-header">
+		  <a href="#" class="close">&times;</a>
+		  <h3>Open File</h3>
+		</div>
+  <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
+		<div class="modal-body">
+		  <p>Open from File System</p>
+		  <input id="openFileInput" name="openFileInput" type="file" />
+		</div>
+		<div class="modal-footer">
+		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
+		  <button id="closeFileButton" class="btn secondary">Close</button>
+		</div>
+	  </form>
+
+	  </div>
     <div id="modal-export" class="modal hide fade">
     <div class="modal-header">
       <a href="#" class="close">&times;</a>
@@ -110,13 +100,7 @@
                   <li><a href="#">From Other Location</a></li>
                 </ul>
               </li>
-              <li class="dropdown" data-dropdown="dropdown" >
-                <a href="#" class="dropdown-toggle">Save</a>
-                <ul class="dropdown-menu">
-                  <li><a href="#" data-controls-modal="modal-save" data-backdrop="true" data-keyboard="true">Save As</a></li>
-                  <li><a href="#">Save</a></li>
-                </ul>
-              </li>
+              <li><a href="#">Save</a></li>
               <li><a href="#" data-controls-modal="modal-export" data-backdrop="true" data-keyboard="true">Export</a></li>
               <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
               <li><a href="#" data-controls-modal="modal-contact" data-backdrop="true" data-keyboard="true">Contact Us</a></li>
@@ -138,78 +122,72 @@
     <script src="/share/share.js"></script>
     <script src="/share/ace.js"></script>
     <script>
-window.onload = function() {
-  var converter = new Showdown.converter();
-  var view = document.getElementById('view');
+		window.onload = function() {
+		  var converter = new Showdown.converter();
+		  var view = document.getElementById('view');
 
-      var editor = ace.edit("editor");
-  editor.setReadOnly(true);
-  editor.session.setUseWrapMode(true);
-  editor.setShowPrintMargin(false);
+			  var editor = ace.edit("editor");
+		  editor.setReadOnly(true);
+		  editor.session.setUseWrapMode(true);
+		  editor.setShowPrintMargin(false);
 
-  // This could instead be written simply as:
-  // sharejs.open('{{{docName}}}', function(doc, error) {
-  //   ...
+		  // This could instead be written simply as:
+		  // sharejs.open('{{{docName}}}', function(doc, error) {
+		  //   ...
 
-  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + 8081 + '/sjs');
+		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + 8081 + '/sjs');
 
-  connection.open('{{{docName}}}', function(error, doc) {
-    if (error) {
-      console.error(error);
-      return;
-    }
-    doc.attach_ace(editor);
-    editor.setReadOnly(false);
+		  connection.open('{{{docName}}}', function(error, doc) {
+			if (error) {
+			  console.error(error);
+			  return;
+			}
+			doc.attach_ace(editor);
+			editor.setReadOnly(false);
 
-    var render = function() {
-      view.innerHTML = converter.makeHtml(doc.snapshot);
-    };
+			var render = function() {
+			  view.innerHTML = converter.makeHtml(doc.snapshot);
+			};
 
-    window.doc = doc;
+			window.doc = doc;
 
-    render();
-    doc.on('change', render);
-  });
-};
+			render();
+			doc.on('change', render);
+		  });
+		};
 
-$('#openFileButton').click(function() {
-//       var loadedContent, fs;
-//       fs = require('fs');
-//       loadedContent = fs.readFile($(":file").value, function (err, data) {
-//           if (err) throw err;
-//           return data;
-//         });
-//       $('#editor').value = loadedContent;
-  $('#modal-open').modal('hide');
-});
-$('#openSaveButton').click(function() {
-  $('#modal-save').modal('hide');
-});
-$('#openExportButton').click(function() {
-  $('#modal-export').modal('hide');
-});
-$('#openSettingsButton').click(function() {
-  $('#modal-settings').modal('hide');
-});
-$('#openContactButton').click(function() {
-  $('#modal-contact').modal('hide');
-});
+		$('#openFileButton').click(function() {
+		  $('#modal-open').modal('hide');  
+		});
+		
+		$('#openSaveButton').click(function() {
+		  $('#modal-save').modal('hide');
+		});
+		$('#openExportButton').click(function() {
+		  $('#modal-export').modal('hide');
+		});
+		$('#openSettingsButton').click(function() {
+		  $('#modal-settings').modal('hide');
+		});
+		$('#openContactButton').click(function() {
+		  $('#modal-contact').modal('hide');
+		});
 
-$('#closeFileButton').click(function() {
-  $('#modal-open').modal('hide');
-});
-$('#closeSaveButton').click(function() {
-  $('#modal-save').modal('hide');
-});
-$('#closeExportButton').click(function() {
-  $('#modal-export').modal('hide');
-});
-$('#closeSettingsButton').click(function() {
-  $('#modal-settings').modal('hide');
-});
-$('#closeContactButton').click(function() {
-  $('#modal-contact').modal('hide');
-});
+		$('#closeFileButton').click(function() {
+		  $('#modal-open').modal('hide');
+		});
+		$('#closeSaveButton').click(function() {
+		  $('#modal-save').modal('hide');
+		});
+		$('#closeExportButton').click(function() {
+		  $('#modal-export').modal('hide');
+		});
+		$('#closeSettingsButton').click(function() {
+		  $('#modal-settings').modal('hide');
+		});
+		$('#closeContactButton').click(function() {
+		  $('#modal-contact').modal('hide');
+		});
     </script>
   </body>
 </html>  
