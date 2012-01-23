@@ -4,15 +4,17 @@
   "description": "A new markdown editor",
   "keywords": ["markdown", "editor", "collaborative", "database", "server"],
   "author": "Dario Renzulli <dario.renzulli@southworks.net>",
+  "contributors": [ "Mariano Vazquez <mariano.vazquez@southworks.net" ],
   "dependencies": {
     "share": "*",
     "connect": ">= 1.1.1 < 2.0.0",
     "coffee-script": "> 1.1.0",
-    "mustache": "*"
+    "mustache": "*",
+	"azure": "*"
   },
   "engine": "node >= 0.4.4",
   "repository": {
     "type": "git",
-    "url": "http://github.com/darrenzully/markdownr.git"
+    "url": "http://github.com/southworksinc/markdownR.git"
   }
 }
