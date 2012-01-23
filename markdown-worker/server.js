@@ -1,22 +1,44 @@
-require('coffee-script'); 
 var connect = require('connect'),
-	sharejs = require('share');
+	sharejs = require('share'),
+	Editor = require('./edit/Editor.js');
 
 var server = connect(
 	connect.favicon(),
 	connect.static(__dirname + '/'),
 	connect.router(function (app) {
-		var editor = require('./edit');
+		
+		var editor = new Editor();
+		
 		app.get('/?', function(req, res, next) {
-			res.writeHead(301, {location: '/editor/new'});
+			res.writeHead(301, {location: '/new'});
 			res.end();
 		});
-
-		app.get('/editor/:docName', function(req, res, next) {
+		
+		app.get('/:docName', function(req, res, next) {
 			var docName;
 			docName = req.params.docName;
-			editor(docName, server.model, res, next);
+			editor.openDocument(docName, server.model, res, next);
 		});
+
+		app.post('/openFile/:docName', function(req, res, next) {
+			var docName;
+			editor.openFile(docName, server.model, res, next);
+		});
+
+		app.post('/openBlob/:docName', function(req, res, next) {
+			var docName;
+			editor.openBlob(docName, server.model, res, next);
+		});
+
+		app.post('/saveToFile/:docName', function(req, res, next) {
+			var docName;
+			editor.saveDocument(docName, server.model, res, next);
+		});
+
+		app.post('/saveToBlob/:docName', function(req, res, next) {
+			var docName;
+			editor.saveToBlob(docName, server.model, res, next);
+		});	
 	})
 );
 
