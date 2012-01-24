@@ -9,8 +9,8 @@ var defaultContent = function(name) {
 
 module.exports = Editor;
 
-function Editor(){
-	// do nothing
+function Editor(blobClient){
+	this.blobClient = blobClient;
 }
 
 Editor.prototype = {
@@ -44,7 +44,7 @@ Editor.prototype = {
 		});
 	},
 	
-	// open the file and save it a new document in the saver
+	// open the file and save it as a new document
 	openFile: function(filePath, docName, model, res) {
 		var self = this;
 		var content = fs.readFileSync(filePath, 'utf8');
@@ -52,6 +52,22 @@ Editor.prototype = {
 			model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
 				res.redirect('/' + docName);
 			});
+		});
+	},
+
+	// open the blob and saveit as a new document
+	openBlob: function(containerName, blobName, model, res) {
+		var self = this;
+		var content = self.blobClient.getBlobToText(containerName, blobName,  function(err, blob){
+			if (!err){
+				model.create(blobName, 'text', function() {
+					model.applyOp(blobName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
+						res.redirect('/' + blobName);
+					});
+				});
+			}
+			else
+				console.log(err);
 		});
 	},
 	
@@ -63,6 +79,52 @@ Editor.prototype = {
 				fs.writeFileSync(tempPath, data.snapshot);
 				res.download(tempPath, docName + '.markdown');
 			}
+		});
+	},
+	
+	saveBlob: function(blobName, model, res) {
+		var self = this;
+		var content = self.blobClient.getBlobToText(self.containerName, blobName,  function(err, blob){
+			if (!err){
+				console.log('blob info: ' + blob);
+				model.create(blobName, 'text', function() {
+					model.applyOp(blobName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
+						res.redirect('/' + blobName);
+					});
+				});
+			}
+			else
+				console.log(err);
+		});
+	},
+	
+	listAllContainers: function(res){
+		var self = this;
+		self.blobClient.listContainers(function(err, containers){
+			if(!err){
+				var containerNames = [];
+				for(var key in containers){
+					containerNames.push(containers[key].name);
+				}
+				res.send({ 'containerNames' : containerNames});
+			}
+			else
+				console.log(err);
+		});
+	},
+	
+	listAllBlobs: function(containerName, res){
+		var self = this;
+		self.blobClient.listBlobs(containerName, function(err, blobs){
+			if(!err){
+				var blobNames = [];
+				for(var key in blobs){
+					blobNames.push(blobs[key].name);
+				}
+				res.json({ 'blobNames' : blobNames});
+			}
+			else
+				console.log(err);
 		});
 	}
 };

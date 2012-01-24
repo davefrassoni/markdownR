@@ -8,15 +8,15 @@
     <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
   </head>
   <body>
-	  <div id="modal-open" class="modal hide fade">
+	  <div id="modal-openFromFile" class="modal hide fade">
   		<div class="modal-header">
   		  <a href="#" class="close">&times;</a>
   		  <h3>Open from File System</h3>
   		</div>
-      <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
+      <form id="openFileForm" action="../openFile" method="post" enctype="multipart/form-data">
     		<div class="modal-body">
     		  <p>Select the File</p>
-    		  <input id="openFileInput" name="openFileInput" type="file" accept="text" />
+    		  <input id="openFileInput" name="openFileInput" type="file" accept="text" size="70" />
     		</div>
     		<div class="modal-footer">
     		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
@@ -29,13 +29,21 @@
         <a href="#" class="close">&times;</a>
         <h3>Open from Blob</h3>
       </div>
-      <div class="modal-body">
-        <p>Select the File from the following blobs:</p>
-      </div>
-      <div class="modal-footer">
-        <input id="openBlobButton" class="btn primary" type="submit" value="Ok" />
-        <button id="closeBlobButton" class="btn secondary">Close</button>
-      </div>
+	  <form id="openBlobForm" action="../openBlob" method="post">
+		  <div class="modal-body span5">
+			<p>Select one of the following blobs:</p>
+			<select id="containerSelect" name="containerSelect" class="medium" size="10" style="height:80px; width:150px">
+				<option value=""></option>
+			</select>
+			<select id="blobSelect" name="blobSelect" class="medium" size="10" style="height:80px; width:150px">
+				<option value=""></option>
+			</select>
+		</div>
+		  <div class="modal-footer">
+			<input id="openBlobButton" class="btn primary" type="submit" value="Ok" />
+			<button id="closeBlobButton" class="btn secondary">Close</button>
+		  </div>
+	  </form>
     </div>
     <div id="modal-export" class="modal hide fade">
       <div class="modal-header">
@@ -104,32 +112,51 @@
 		  var converter = new Showdown.converter();
 		  var view = document.getElementById('view');
 
-			  var editor = ace.edit("editor");
+		  var editor = ace.edit("editor");
 		  editor.setReadOnly(true);
 		  editor.session.setUseWrapMode(true);
 		  editor.setShowPrintMargin(false);
 
 		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + 8081 + '/sjs');
 
-		  connection.open('{{{docName}}}', function(error, doc) {
-			if (error) {
-			  console.error(error);
-			  return;
-			}
-			doc.attach_ace(editor);
-			editor.setReadOnly(false);
+			connection.open('{{{docName}}}', function(error, doc) {
+				if (error) {
+				  console.error(error);
+				  return;
+				}
+				doc.attach_ace(editor);
+				editor.setReadOnly(false);
 
-			var render = function() {
-			  view.innerHTML = converter.makeHtml(doc.snapshot);
-			};
+				var render = function() {
+				  view.innerHTML = converter.makeHtml(doc.snapshot);
+				};
 
-			window.doc = doc;
+				window.doc = doc;
 
-			render();
-			doc.on('change', render);
-		  });
+				render();
+				doc.on('change', render);
+			});
+		
+			// bindings
+			$('#modal-openFromBlob').bind('show', function(){
+				$.post('../listAllContainers', function(data) {
+					$("#containerSelect").empty();
+					$.each(data.containerNames, function(index, value){
+						$("#containerSelect").append(new Option(value,value));
+					});
+				});
+			});
 		});
 
+		$('#containerSelect').change(function(){
+			$("#blobSelect").empty();
+			$.post('../listAllBlobs',{ 'containerName': $(this).val()  },function(data) {
+				$.each(data.blobNames, function(index, value){
+					$("#blobSelect").append(new Option(value,value));
+				});
+			});
+		});
+		
 		$('#openFileButton').click(function() {
 		  $('#modal-open').modal('hide');  
 		});

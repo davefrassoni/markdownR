@@ -1,7 +1,7 @@
 var express = require('express'),
 	sharejs = require('share'),
 	Editor = require('./edit/Editor.js'),
-	formidable = require('formidable');
+	azure = require('azure');
 
 var app = express.createServer();	
 
@@ -24,13 +24,15 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+
 // Routes
 
-var editor = new Editor();
+process.env.EMULATED = true;
+var blobService = azure.createBlobService();
+var editor = new Editor(blobService);
 
 app.get('/?', function(req, res, next) {
-	res.writeHead(301, {location: '/new'});
-	res.end();
+	res.redirect('/new');
 });
 
 app.get('/:docName', function(req, res, next) {
@@ -44,9 +46,10 @@ app.post('/openFile', function(req, res, next) {
 	editor.openFile(path, docName, app.model, res);
 });
 
-app.post('/openBlob/:docName', function(req, res, next) {
-	var docName;
-	editor.openBlob(docName, app.model, res, next);
+app.post('/openBlob', function(req, res) {
+	var containerName = req.body.containerSelect;
+	var blobName = req.body.blobSelect;
+	editor.openBlob(containerName, blobName, app.model, res);
 });
 
 app.get('/saveFile/:docName', function(req, res, next) {
@@ -54,12 +57,19 @@ app.get('/saveFile/:docName', function(req, res, next) {
 	editor.saveFile(docName, app.model, res, next);
 });
 
-app.post('/saveBlob/:docName', function(req, res, next) {
-	var docName;
-	editor.saveBlob(docName, app.model, res, next);
+app.post('/saveBlob/:blobName', function(req, res, next) {
+	var blobName = req.params.blobName;
+	editor.saveBlob(blobName, app.model, res);
 });	
 
+app.post('/listAllContainers', function(req, res) {
+	editor.listAllContainers(res);
+});
 
+app.post('/listAllBlobs', function(req, res) {
+	var containerName = req.body.containerName;
+	editor.listAllBlobs(containerName, res);
+});
 
 var options = {
   db: {type: 'none'},
