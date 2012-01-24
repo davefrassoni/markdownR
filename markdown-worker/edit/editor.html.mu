@@ -9,21 +9,34 @@
   </head>
   <body>
 	  <div id="modal-open" class="modal hide fade">
-		<div class="modal-header">
-		  <a href="#" class="close">&times;</a>
-		  <h3>Open from File System</h3>
-		</div>
-    <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
-  		<div class="modal-body">
-  		  <p>Select the File</p>
-  		  <input id="openFileInput" name="openFileInput" type="file" />
+  		<div class="modal-header">
+  		  <a href="#" class="close">&times;</a>
+  		  <h3>Open from File System</h3>
   		</div>
-  		<div class="modal-footer">
-  		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
-  		  <button id="closeFileButton" class="btn secondary">Close</button>
-  		</div>
-	  </form>
-	  </div>
+      <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
+    		<div class="modal-body">
+    		  <p>Select the File</p>
+    		  <input id="openFileInput" name="openFileInput" type="file" />
+    		</div>
+    		<div class="modal-footer">
+    		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
+    		  <button id="closeFileButton" class="btn secondary">Close</button>
+    		</div>
+  	  </form>
+  	</div>
+    <div id="modal-openFromBlob" class="modal hide fade">
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Open from Blob</h3>
+      </div>
+      <div class="modal-body">
+        <p>Select the File from the following blobs:</p>
+      </div>
+      <div class="modal-footer">
+        <input id="openBlobButton" class="btn primary" type="submit" value="Ok" />
+        <button id="closeBlobButton" class="btn secondary">Close</button>
+      </div>
+    </div>
     <div id="modal-export" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close">&times;</a>
@@ -60,9 +73,9 @@
                 <a href="#" class="dropdown-toggle">Open</a>
                 <ul class="dropdown-menu">
                   <li><a href="#" data-controls-modal="modal-open" data-backdrop="true" data-keyboard="true">From File System</a></li>
-                  <li><a href="#">From GitHub</a></li>
+                  <li><a href="#" data-controls-modal="modal-openFromBlob" data-backdrop="true" data-keyboard="true">From Blob Storage</a></li>
                   <li class="divider"></li>
-                  <li><a href="#">From Other Location</a></li>
+                  <li><a href="#">From GitHub</a></li>
                 </ul>
               </li>
               <li><a id='openSaveButton' href='../saveFile/{{{docName}}}'>Save</a></li>
@@ -120,7 +133,10 @@
 		$('#openFileButton').click(function() {
 		  $('#modal-open').modal('hide');  
 		});
-		$('#openExportButton').click(function() {
+		$('#openBlobButton').click(function() {
+      $('#modal-openFromBlob').modal('hide');  
+    });
+    $('#openExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
 		$('#openSettingsButton').click(function() {
@@ -129,6 +145,9 @@
 		$('#closeFileButton').click(function() {
 		  $('#modal-open').modal('hide');
 		});
+    $('#closeBlobButton').click(function() {
+      $('#modal-openFromBlob').modal('hide');
+    });
 		$('#closeExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
