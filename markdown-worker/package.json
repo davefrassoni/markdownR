@@ -7,10 +7,10 @@
   "contributors": [ "Mariano Vazquez <mariano.vazquez@southworks.net" ],
   "dependencies": {
     "share": "*",
-    "connect": ">= 1.1.1 < 2.0.0",
     "coffee-script": "> 1.1.0",
     "mustache": "*",
-	"azure": "*"
+	"azure": "*",
+	"express": "*"
   },
   "engine": "node >= 0.4.4",
   "repository": {

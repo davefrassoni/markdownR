@@ -27,7 +27,7 @@ Editor.prototype = {
 		res.end(html);
 	},
 	
-	// file in DB
+	// open a document stored in the server
 	openDocument: function(docName, model, res) {
 		var self = this;
 		return model.getSnapshot(docName, function(error, data) {
@@ -39,19 +39,31 @@ Editor.prototype = {
 				});
 			  });
 			} else {
-			  return self.render(data.snapshot, docName, res);
+				return self.render(data.snapshot, docName, res);
 			}
 		});
 	},
 	
-	// file in client file system
-	openFile: function(filePath, fileName, model, res) {
+	// open the file and save it a new document in the saver
+	openFile: function(filePath, docName, model, res) {
 		var self = this;
 		var content = fs.readFileSync(filePath, 'utf8');
-		return model.create(fileName, 'text', function() {
-			return model.applyOp(fileName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
-				return self.render(content, fileName, res);
+		model.create(docName, 'text', function() {
+			model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
+				res.redirect('/' + docName);
 			});
+		});
+	},
+	
+	saveFile: function(docName, model, res){
+		var self = this;
+		return model.getSnapshot(docName, function(error, data) {
+			if (!error){
+				var tempPath = 'temp.txt';
+				fs.writeFileSync(tempPath, data.snapshot);
+				res.download(tempPath, tempPath);
+				//res.end();
+			}
 		});
 	}
 };

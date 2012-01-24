@@ -1,11 +1,11 @@
 <html>
   <head>
     <title>MarkdownR {{name}}</title>
-    <link href="/edit/style.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-modal.js" type="text/javascript"></script>
-    <script src="http://twitter.github.com/bootstrap/1.4.0/bootstrap-dropdown.js"></script>
+    <link rel="stylesheet" type="text/css" href="/edit/style.css">
+    <link rel="stylesheet" type="text/css" href="/lib/bootstrap.min.css">
+    <script type="text/javascript" src="/lib/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
   </head>
 
   <body>
@@ -100,7 +100,7 @@
                   <li><a href="#">From Other Location</a></li>
                 </ul>
               </li>
-              <li><a href="#">Save</a></li>
+              <li><a id='openSaveButton' href='../saveFile/{{{docName}}}'>Save</a></li>
               <li><a href="#" data-controls-modal="modal-export" data-backdrop="true" data-keyboard="true">Export</a></li>
               <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
               <li><a href="#" data-controls-modal="modal-contact" data-backdrop="true" data-keyboard="true">Contact Us</a></li>
@@ -122,6 +122,7 @@
     <script src="/share/share.js"></script>
     <script src="/share/ace.js"></script>
     <script>
+	
 		window.onload = function() {
 		  var converter = new Showdown.converter();
 		  var view = document.getElementById('view');
@@ -160,9 +161,16 @@
 		  $('#modal-open').modal('hide');  
 		});
 		
-		$('#openSaveButton').click(function() {
-		  $('#modal-save').modal('hide');
-		});
+		// $('#openSaveButton').click(function(event) {
+			// event.preventDefault();
+			// $.ajax({
+			  // type: 'GET',
+			  // url: '../saveFile/'+ documentName,
+			  // data: { 'docName': documentName},
+			  // success: function(data){alert(data);}
+			// });
+			// //$.post('../saveFile/' + documentName, { 'docName': documentName});
+		// });
 		$('#openExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
