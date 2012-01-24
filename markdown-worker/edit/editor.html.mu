@@ -16,7 +16,7 @@
       <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
     		<div class="modal-body">
     		  <p>Select the File</p>
-    		  <input id="openFileInput" name="openFileInput" type="file" />
+    		  <input id="openFileInput" name="openFileInput" type="file" accept="text" />
     		</div>
     		<div class="modal-footer">
     		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
@@ -100,7 +100,7 @@
     <script src="/share/ace.js"></script>
     <script>
 	
-		window.onload = function() {
+		$(document).ready(function() {
 		  var converter = new Showdown.converter();
 		  var view = document.getElementById('view');
 
@@ -128,15 +128,15 @@
 			render();
 			doc.on('change', render);
 		  });
-		};
+		});
 
 		$('#openFileButton').click(function() {
 		  $('#modal-open').modal('hide');  
 		});
 		$('#openBlobButton').click(function() {
-      $('#modal-openFromBlob').modal('hide');  
-    });
-    $('#openExportButton').click(function() {
+		  $('#modal-openFromBlob').modal('hide');  
+		});
+		$('#openExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
 		$('#openSettingsButton').click(function() {
@@ -145,9 +145,9 @@
 		$('#closeFileButton').click(function() {
 		  $('#modal-open').modal('hide');
 		});
-    $('#closeBlobButton').click(function() {
-      $('#modal-openFromBlob').modal('hide');
-    });
+		$('#closeBlobButton').click(function() {
+		  $('#modal-openFromBlob').modal('hide');
+		});
 		$('#closeExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
