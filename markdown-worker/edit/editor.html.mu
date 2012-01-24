@@ -7,83 +7,48 @@
     <script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
   </head>
-
   <body>
 	  <div id="modal-open" class="modal hide fade">
 		<div class="modal-header">
 		  <a href="#" class="close">&times;</a>
-		  <h3>Open File</h3>
+		  <h3>Open from File System</h3>
 		</div>
-  <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
-		<div class="modal-body">
-		  <p>Open from File System</p>
-		  <input id="openFileInput" name="openFileInput" type="file" />
-		</div>
-		<div class="modal-footer">
-		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
-		  <button id="closeFileButton" class="btn secondary">Close</button>
-		</div>
+    <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
+  		<div class="modal-body">
+  		  <p>Select the File</p>
+  		  <input id="openFileInput" name="openFileInput" type="file" />
+  		</div>
+  		<div class="modal-footer">
+  		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
+  		  <button id="closeFileButton" class="btn secondary">Close</button>
+  		</div>
 	  </form>
-
 	  </div>
     <div id="modal-export" class="modal hide fade">
-    <div class="modal-header">
-      <a href="#" class="close">&times;</a>
-      <h3>Export to...</h3>
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Export to...</h3>
+      </div>
+      <div class="modal-body">
+        <p>Exporting to...</p>
+      </div>
+      <div class="modal-footer">
+        <button id="openExportButton" class="btn primary">Ok</button>
+        <button id="closeExportButton" class="btn secondary">Cancel</button>
+      </div>
     </div>
-    <div class="modal-body">
-      <p>Exporting to...</p>
-    </div>
-    <div class="modal-footer">
-      <button id="openExportButton" class="btn primary">Ok</button>
-      <button id="closeExportButton" class="btn secondary">Cancel</button>
-    </div>
-  </div>
     <div id="modal-settings" class="modal hide fade">
-    <div class="modal-header">
-      <a href="#" class="close">&times;</a>
-      <h3>Settings</h3>
-    </div>
-    <div class="modal-body">
-      <p>Settings</p>
-    </div>
-    <div class="modal-footer">
-      <button id="openSettingsButton" class="btn primary">Ok</button>
-      <button id="closeSettingsButton" class="btn secondary">Cancel</button>
-    </div>
-  </div>
-  <div id="modal-contact" class="modal hide fade">
-    <div class="modal-header">
-      <a href="#" class="close">&times;</a>
-      <h3>Contact us:</h3>
-    </div>
-    <div class="modal-body">
-    <form>
-      <fieldset>
-      <div class="clearfix">
-        <label for="name">Name:</label>
-        <div class="input">
-          <input id="name" class="span5" type="text" />
-        </div>
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Settings</h3>
       </div>
-      <div class="clearfix">
-        <label for="email">Email:</label>
-        <div class="input">
-          <input id="email" class="span5" type="text" />
-        </div>
+      <div class="modal-body">
+        <p>Settings</p>
       </div>
-      <div class="clearfix">
-        <label for="message">Message:</label>
-        <div class="input">
-          <textarea cols=20 rows=10 class="span5" id="message"></textarea>
-        </div>
+      <div class="modal-footer">
+        <button id="openSettingsButton" class="btn primary">Ok</button>
+        <button id="closeSettingsButton" class="btn secondary">Cancel</button>
       </div>
-    </fieldset>
-    </form>
-    </div>
-    <div class="modal-footer">
-      <button id="openContactButton" class="btn primary">Ok</button>
-      <button id="closeContactButton" class="btn secondary">Cancel</button>
     </div>
   </div>
     <div class="topbar-wrapper">
@@ -103,7 +68,6 @@
               <li><a id='openSaveButton' href='../saveFile/{{{docName}}}'>Save</a></li>
               <li><a href="#" data-controls-modal="modal-export" data-backdrop="true" data-keyboard="true">Export</a></li>
               <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
-              <li><a href="#" data-controls-modal="modal-contact" data-backdrop="true" data-keyboard="true">Contact Us</a></li>
             </ul>
           </div>
         </div>
@@ -132,10 +96,6 @@
 		  editor.session.setUseWrapMode(true);
 		  editor.setShowPrintMargin(false);
 
-		  // This could instead be written simply as:
-		  // sharejs.open('{{{docName}}}', function(doc, error) {
-		  //   ...
-
 		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + 8081 + '/sjs');
 
 		  connection.open('{{{docName}}}', function(error, doc) {
@@ -160,41 +120,20 @@
 		$('#openFileButton').click(function() {
 		  $('#modal-open').modal('hide');  
 		});
-		
-		// $('#openSaveButton').click(function(event) {
-			// event.preventDefault();
-			// $.ajax({
-			  // type: 'GET',
-			  // url: '../saveFile/'+ documentName,
-			  // data: { 'docName': documentName},
-			  // success: function(data){alert(data);}
-			// });
-			// //$.post('../saveFile/' + documentName, { 'docName': documentName});
-		// });
 		$('#openExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
 		$('#openSettingsButton').click(function() {
 		  $('#modal-settings').modal('hide');
 		});
-		$('#openContactButton').click(function() {
-		  $('#modal-contact').modal('hide');
-		});
-
 		$('#closeFileButton').click(function() {
 		  $('#modal-open').modal('hide');
-		});
-		$('#closeSaveButton').click(function() {
-		  $('#modal-save').modal('hide');
 		});
 		$('#closeExportButton').click(function() {
 		  $('#modal-export').modal('hide');
 		});
 		$('#closeSettingsButton').click(function() {
 		  $('#modal-settings').modal('hide');
-		});
-		$('#closeContactButton').click(function() {
-		  $('#modal-contact').modal('hide');
 		});
     </script>
   </body>
