@@ -59,10 +59,9 @@ Editor.prototype = {
 		var self = this;
 		return model.getSnapshot(docName, function(error, data) {
 			if (!error){
-				var tempPath = 'temp.txt';
+				var tempPath = 'temp.markdown';
 				fs.writeFileSync(tempPath, data.snapshot);
-				res.download(tempPath, tempPath);
-				//res.end();
+				res.download(tempPath, docName + '.markdown');
 			}
 		});
 	}

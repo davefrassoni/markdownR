@@ -17,7 +17,7 @@
   <form id="openForm" action="../openFile" method="post" enctype="multipart/form-data">
 		<div class="modal-body">
 		  <p>Open from File System</p>
-		  <input id="openFileInput" name="openFileInput" type="file" />
+		  <input id="openFileInput" name="openFileInput" type="file" accept="text" />
 		</div>
 		<div class="modal-footer">
 		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
