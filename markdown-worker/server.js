@@ -57,6 +57,11 @@ app.get('/saveFile/:docName', function(req, res, next) {
 	editor.saveFile(docName, app.model, res, next);
 });
 
+app.get('/preview/:docName', function(req, res, next) {
+	var docName = req.params['docName'];
+	editor.preview(docName, app.model, res, next);
+});
+
 app.post('/saveBlob/:blobName', function(req, res, next) {
 	var blobName = req.params.blobName;
 	editor.saveBlob(blobName, app.model, res);

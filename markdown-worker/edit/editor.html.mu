@@ -46,19 +46,6 @@
 		  </div>
 	  </form>
     </div>
-    <div id="modal-export" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close">&times;</a>
-        <h3>Export to...</h3>
-      </div>
-      <div class="modal-body">
-        <p>Exporting to...</p>
-      </div>
-      <div class="modal-footer">
-        <button id="openExportButton" class="btn primary">Ok</button>
-        <button id="closeExportButton" class="btn secondary">Cancel</button>
-      </div>
-    </div>
     <div id="modal-settings" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close">&times;</a>
@@ -88,7 +75,7 @@
                 </ul>
               </li>
               <li><a id='openSaveButton' href='../saveFile/{{{docName}}}'>Save</a></li>
-              <li><a href="#" data-controls-modal="modal-export" data-backdrop="true" data-keyboard="true">Export</a></li>
+              <li><a id='openPreviewButton' href='../preview/{{{docName}}}'>Preview</a></li>
               <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
             </ul>
           </div>
@@ -164,9 +151,6 @@
 		$('#openBlobButton').click(function() {
 		  $('#modal-openFromBlob').modal('hide');  
 		});
-		$('#openExportButton').click(function() {
-		  $('#modal-export').modal('hide');
-		});
 		$('#openSettingsButton').click(function() {
 		  $('#modal-settings').modal('hide');
 		});
@@ -175,9 +159,6 @@
 		});
 		$('#closeBlobButton').click(function() {
 		  $('#modal-openFromBlob').modal('hide');
-		});
-		$('#closeExportButton').click(function() {
-		  $('#modal-export').modal('hide');
 		});
 		$('#closeSettingsButton').click(function() {
 		  $('#modal-settings').modal('hide');

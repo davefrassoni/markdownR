@@ -82,6 +82,20 @@ Editor.prototype = {
 		});
 	},
 	
+	preview: function(docName, model, res){
+		var self = this;
+		return model.getSnapshot(docName, function(error, data) {
+			if (!error){
+				var markdown = (new Showdown()).makeHtml(data.snapshot);
+				var htmlData = { markdown: markdown, docName: docName };
+				previewHtml = fs.readFileSync("./edit/preview.html.mu", 'utf8');
+				var html = Mustache.to_html(previewHtml, htmlData);
+				res.writeHead(200, {'content-type': 'text/html'});
+				res.end(html);
+			}
+		});
+	},
+
 	saveBlob: function(blobName, model, res) {
 		var self = this;
 		var content = self.blobClient.getBlobToText(self.containerName, blobName,  function(err, blob){
