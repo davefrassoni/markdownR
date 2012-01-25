@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/lib/jquery-1.6.4.min.js"></script>
     <script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.js"></script>
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -80,7 +81,7 @@
               <li class="dropdown" data-dropdown="dropdown" >
                 <a href="#" class="dropdown-toggle">Open</a>
                 <ul class="dropdown-menu">
-                  <li><a href="#" data-controls-modal="modal-open" data-backdrop="true" data-keyboard="true">From File System</a></li>
+                  <li><a href="#" data-controls-modal="modal-openFromFile" data-backdrop="true" data-keyboard="true">From File System</a></li>
                   <li><a href="#" data-controls-modal="modal-openFromBlob" data-backdrop="true" data-keyboard="true">From Blob Storage</a></li>
                   <li class="divider"></li>
                   <li><a href="#">From GitHub</a></li>
@@ -158,7 +159,7 @@
 		});
 		
 		$('#openFileButton').click(function() {
-		  $('#modal-open').modal('hide');  
+		  $('#modal-openFromFile').modal('hide');  
 		});
 		$('#openBlobButton').click(function() {
 		  $('#modal-openFromBlob').modal('hide');  
@@ -170,7 +171,7 @@
 		  $('#modal-settings').modal('hide');
 		});
 		$('#closeFileButton').click(function() {
-		  $('#modal-open').modal('hide');
+		  $('#modal-openFromFile').modal('hide');
 		});
 		$('#closeBlobButton').click(function() {
 		  $('#modal-openFromBlob').modal('hide');

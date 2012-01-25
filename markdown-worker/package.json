@@ -9,10 +9,10 @@
     "share": "*",
     "coffee-script": "> 1.1.0",
     "mustache": "*",
-	"azure": "*",
+	"azure": "0.5.1",
 	"express": "*"
   },
-  "engine": "node >= 0.4.4",
+  "engine": "node >= 0.7.1",
   "repository": {
     "type": "git",
     "url": "http://github.com/southworksinc/markdownR.git"
