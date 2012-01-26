@@ -66,6 +66,11 @@ app.post('/listAllContainers', function(req, res) {
 	editor.listAllContainers(res);
 });
 
+app.post('/listBlobStructure', function(req, res) {
+	var directory = req.body.dir;
+	editor.listBlobStructure(directory,res);
+});
+
 app.post('/listAllBlobs', function(req, res) {
 	var containerName = req.body.containerName;
 	editor.listAllBlobs(containerName, res);

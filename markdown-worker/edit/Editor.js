@@ -86,7 +86,6 @@ Editor.prototype = {
 		var self = this;
 		var content = self.blobClient.getBlobToText(self.containerName, blobName,  function(err, blob){
 			if (!err){
-				console.log('blob info: ' + blob);
 				model.create(blobName, 'text', function() {
 					model.applyOp(blobName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
 						res.redirect('/' + blobName);
@@ -98,33 +97,93 @@ Editor.prototype = {
 		});
 	},
 	
-	listAllContainers: function(res){
+	listAllContainers: function(callback){
 		var self = this;
-		self.blobClient.listContainers(function(err, containers){
+		self.blobClient.listContainers(function(err, result){
 			if(!err){
-				var containerNames = [];
-				for(var key in containers){
-					containerNames.push(containers[key].name);
+				var names = [];
+				for(var key in result){
+					names.push(result[key].name);
 				}
-				res.send({ 'containerNames' : containerNames});
+				callback(null, names);
 			}
 			else
-				console.log(err);
+				callback(err, null);
 		});
 	},
 	
-	listAllBlobs: function(containerName, res){
+	listAllBlobs: function(containerName, callback){
 		var self = this;
-		self.blobClient.listBlobs(containerName, function(err, blobs){
+		
+		
+		self.blobClient.listBlobs(containerName, function(err, result){
 			if(!err){
-				var blobNames = [];
-				for(var key in blobs){
-					blobNames.push(blobs[key].name);
+				var blobs = [];
+				for(var key in result){
+					var filePath = result[key].name;
+					var folders = result[key].name.split('/');
+					var relativePath = '';
+					for(var i = 0; i < folders.length - 1; i++){
+						var folderPath = relativePath + folders[i];
+						relativePath += folders[i] + '/';
+						var add = true;
+						//check if it's in the array
+						for (var j = 0; i < blobs.length; i++){
+							if (blobs[j].path == folderPath){
+								add = false;
+								break;
+							}
+						}
+						if (add){
+							var folderName = folderPath.split('/')[folderPath.split('/').length - 1];
+							blobs.push({ 'path': folderPath, 'name': folderName ,'type': 'folder'});
+						}
+					}
+					var fileName = filePath.split('/')[filePath.split('/').length - 1];
+					blobs.push({ 'path': filePath, 'name': fileName, 'type': 'file'});
 				}
-				res.json({ 'blobNames' : blobNames});
+				// create the html
+				var result = "<ul class='jqueryFileTree' style='display: none;'>";
+				
+				for(var key in blobs){
+					if (blobs[key].type = 'folder'){
+						result += "<li class='directory collapsed'><a href='#' rel='/"+ blobs[key].path +"/'>" + blobs[key].name + "</a></li>";
+					}
+					else
+						result += "<li class='file ext_css'><a href='#' rel='" + blobs[key].path + "'>" + blobs[key].name + "</a></li>";
+				}
+				result += "</ul>";
+				callback(null, result);
 			}
 			else
-				console.log(err);
+				console.log(err, null);
 		});
-	}
+	},
+	
+	listBlobStructure: function(directory, res){
+		var self = this;
+		var directoryName = directory.replace(/\//g,'').trim();
+		if (!directoryName){
+			self.listAllContainers(function(err, result){
+				if (!err){
+					var html = "<ul class='jqueryFileTree' style='display: none;'>";
+					for(var key in result){
+						html += "<li class='directory collapsed'><a href='#' rel='/" + result[key] + "/'>" + result[key] + "</a></li>";
+					}
+					res.send(html);
+				}
+				else
+					console.log(err);
+			});
+		}
+		else{
+			self.listAllBlobs(directoryName,function(err, result){
+				if (!err){
+					res.send(result);
+				}
+				else
+					console.log(err);
+			});
+		}
+	},
 };

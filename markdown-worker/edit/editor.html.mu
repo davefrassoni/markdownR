@@ -2,10 +2,19 @@
   <head>
     <title>MarkdownR {{name}}</title>
     <link rel="stylesheet" type="text/css" href="/edit/style.css">
-    <link rel="stylesheet" type="text/css" href="/lib/bootstrap.min.css">
     <script type="text/javascript" src="/lib/jquery-1.6.4.min.js"></script>
-    <script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
+    
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/lib/bootstrap.min.css">
+	<script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
     <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
+	
+	<!-- validation -->
+	<script type="text/javascript" src="/lib/jquery.validate-1.9.min.js"></script>
+	
+	<!-- tree file -->
+	<script type="text/javascript" src="/lib/jqueryFileTree.js"></script>
+	<link rel="stylesheet" type="text/css" href="/lib/jqueryFileTree.css">
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -15,11 +24,12 @@
   		</div>
       <form id="openFileForm" action="../openFile" method="post" enctype="multipart/form-data">
     		<div class="modal-body">
-    		  <p>Select the File</p>
-    		  <input id="openFileInput" name="openFileInput" type="file" accept="text" size="70" />
+			  <p>Select the File from your local disk:</p>
+				<input id="openFileInput" name="openFileInput" type="file" size="50" />
+			  
     		</div>
     		<div class="modal-footer">
-    		  <input id="openFileButton" class="btn primary" type="submit" value="Ok" />
+    		  <input id="openFileButton" class="btn primary submit" type="submit" value="Ok" />
     		  <button id="closeFileButton" class="btn secondary">Close</button>
     		</div>
   	  </form>
@@ -31,13 +41,8 @@
       </div>
 	  <form id="openBlobForm" action="../openBlob" method="post">
 		  <div class="modal-body span5">
-			<p>Select one of the following blobs:</p>
-			<select id="containerSelect" name="containerSelect" class="medium" size="10" style="height:80px; width:150px">
-				<option value=""></option>
-			</select>
-			<select id="blobSelect" name="blobSelect" class="medium" size="10" style="height:80px; width:150px">
-				<option value=""></option>
-			</select>
+			<p>Select one of the blobs from your storage account:</p>
+			<div id="fileTreeContainer" style="width:200px; height:150px; border: solid 1px silver; background-attachment:scroll"  ></div>
 		</div>
 		  <div class="modal-footer">
 			<input id="openBlobButton" class="btn primary" type="submit" value="Ok" />
@@ -80,7 +85,7 @@
               <li class="dropdown" data-dropdown="dropdown" >
                 <a href="#" class="dropdown-toggle">Open</a>
                 <ul class="dropdown-menu">
-                  <li><a href="#" data-controls-modal="modal-open" data-backdrop="true" data-keyboard="true">From File System</a></li>
+                  <li><a href="#" data-controls-modal="modal-openFromFile" data-backdrop="true" data-keyboard="true">From File System</a></li>
                   <li><a href="#" data-controls-modal="modal-openFromBlob" data-backdrop="true" data-keyboard="true">From Blob Storage</a></li>
                   <li class="divider"></li>
                   <li><a href="#">From GitHub</a></li>
@@ -100,8 +105,7 @@
     </div>
     <div id="editor" class="content">{{{content}}}</div>
     </div>
-
-    <script src="../lib/markdown/showdown.js" type="text/javascript"></script>
+	<script src="../lib/markdown/showdown.js" type="text/javascript"></script>
     <script src="../lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/share/share.js"></script>
@@ -137,26 +141,22 @@
 				doc.on('change', render);
 			});
 		
-			// bindings
-			$('#modal-openFromBlob').bind('show', function(){
-				$.post('../listAllContainers', function(data) {
-					$("#containerSelect").empty();
-					$.each(data.containerNames, function(index, value){
-						$("#containerSelect").append(new Option(value,value));
-					});
-				});
+			// file tree
+			$('#fileTreeContainer').fileTree({ root: '/', script: '../listBlobStructure' }, function(file) {
+				alert(file);
+			});
+			
+			// forms validation
+			$('#openFileForm').validate({
+				rules:{
+					openFileInput: {
+					  required: true,
+					  accept: "markdown|md"
+					}
+				}
 			});
 		});
 
-		$('#containerSelect').change(function(){
-			$("#blobSelect").empty();
-			$.post('../listAllBlobs',{ 'containerName': $(this).val()  },function(data) {
-				$.each(data.blobNames, function(index, value){
-					$("#blobSelect").append(new Option(value,value));
-				});
-			});
-		});
-		
 		$('#openFileButton').click(function() {
 		  $('#modal-open').modal('hide');  
 		});
