@@ -55,7 +55,7 @@ app.post('/openBlob', function(req, res) {
 
 app.get('/saveFile/:docName', function(req, res, next) {
 	var docName = req.params['docName'];
-	editor.saveFile(docName, app.model, res, next);
+	editor.saveDocumentToFile(docName, app.model, res, next);
 });
 
 app.get('/preview/:docName', function(req, res, next) {
@@ -63,14 +63,19 @@ app.get('/preview/:docName', function(req, res, next) {
 	editor.preview(docName, app.model, res, next);
 });
 
-app.post('/saveBlob/:blobName', function(req, res, next) {
-	var blobName = req.params.blobName;
-	editor.saveBlob(blobName, app.model, res);
+app.post('/saveToBlob', function(req, res, next) {
+	var saveInfo = JSON.parse(req.body.saveInfo);
+	editor.saveDocumentToBlob(saveInfo.documentName, saveInfo.container, saveInfo.blobName, app.model, res);
 });	
 
 app.post('/listBlobStructure', function(req, res) {
 	var directory = req.body.dir;
 	editor.listBlobStructure(directory, req, res);
+});
+
+app.post('/listBlobFolderStructure', function(req, res) {
+	var directory = req.body.dir;
+	editor.listBlobFolderStructure(directory, req, res);
 });
 
 var options = {

@@ -75,7 +75,7 @@ Editor.prototype = {
 		});
 	},
 	
-	saveFile: function(docName, model, res){
+	saveDocumentToFile: function(docName, model, res){
 		var self = this;
 		return model.getSnapshot(docName, function(error, data) {
 			if (!error){
@@ -100,14 +100,16 @@ Editor.prototype = {
 		});
 	},
 
-	saveBlob: function(blobName, model, res) {
+	saveDocumentToBlob: function(docName, container, blobPath, model, res) {
 		var self = this;
-		self.blobService.getBlobToText(self.containerName, blobName,  function(err, blob){
+		model.getSnapshot(docName, function(err, data){
 			if (!err){
-				model.create(blobName, 'text', function() {
-					model.applyOp(blobName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
-						res.redirect('/' + blobName);
-					});
+				self.blobService.uploadTextToBlob(container, blobPath, data.snapshot, function(err, result){
+					if(!err)
+						res.redirect(docName);
+					else
+						console.log(err);
+						
 				});
 			}
 			else
@@ -149,4 +151,39 @@ Editor.prototype = {
 			}
 		}
 	},
+	
+	listBlobFolderStructure: function(directory, req, res){
+		var self = this;
+		directory = unescape(directory);
+		if (!directory){
+			self.blobsInContainer = null;
+			self.blobService.getAllContainerNames(function(err, result){
+				if (!err){
+					var html = FileTreeHelper.generateContainersHtml(result);
+					res.send(html);
+				}
+				else
+					console.log(err);
+			});
+		}
+		else{
+			directory = directory.replace(/\/$/, '').trim();
+			if(!req.session.blobsInContainer || req.session.blobsInContainer.containerName != directory.split('/')[0]){
+				self.blobService.getAllBlobsNamesInContainer(directory,function(err, result){
+					if (!err){
+						FileTreeHelper.addRootInPath(directory, result);
+						req.session.blobsInContainer = { 'containerName': directory, 'blobs': result};
+						var html = FileTreeHelper.generateFoldersHtml(directory, result);
+						res.send(html);
+					}
+					else
+						console.log(err);
+				});
+			}
+			else{
+				var html = FileTreeHelper.generateFoldersHtml(directory, req.session.blobsInContainer.blobs);
+				res.send(html);
+			}
+		}
+	}
 };

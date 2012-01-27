@@ -48,5 +48,15 @@ AzureBlobService.prototype = {
 			else
 				callback(err, null);
 		});
+	},
+	
+	uploadTextToBlob: function(container, blob, text, callback){
+		var self = this;
+		self.blobService.createBlockBlobFromText(container, blob, text, function(err, result){
+			if(!err)
+				callback(null, result);
+			else
+				callback(err, null);
+		});
 	}
 };

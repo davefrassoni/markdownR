@@ -22,6 +22,7 @@
 //
 // History:
 //
+// 1.02 - added 'selectable' option
 // 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
 // 1.00 - released (24 March 2008)
 //
@@ -45,6 +46,7 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
+			if( o.select == undefined) o.select = 'none';
 			
 			$(this).each( function() {
 				
@@ -71,12 +73,21 @@ if(jQuery) (function($){
 								$(this).parent().find('UL').remove(); // cleanup
 								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
+								if (o.select == 'folders'){
+									$('ul.jqueryFileTree li.directory > a.selected').removeClass('selected');
+									$(this).addClass('selected');
+									h($(this).attr('rel'));
+								}
 							} else {
 								// Collapse
 								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
+							if (o.select == 'files'){
+								$('ul.jqueryFileTree li.file > a.selected').removeClass('selected');
+								$(this).addClass('selected');
+							}
 							h($(this).attr('rel'));
 						}
 						return false;
