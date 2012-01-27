@@ -10,7 +10,7 @@ app.configure(function(){
   //app.set('views', __dirname + '/views');
   //app.set('view engine', 'jade');
   app.use(express.static(__dirname + '/public'));
-  app.use(express.static(__dirname + '/public/jquery'));
+  app.use(express.static(__dirname + '/'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -77,6 +77,13 @@ app.post('/listBlobFolderStructure', function(req, res) {
 	var directory = req.body.dir;
 	editor.listBlobFolderStructure(directory, req, res);
 });
+
+app.post('/pasteimage', function(req, res, next) {
+    var docName = req.body.docName;
+	var dataURL = req.body.dataURL;
+    editor.uploadFile(docName, app.model, dataURL, res);
+});
+
 
 var options = {
   db: {type: 'none'},

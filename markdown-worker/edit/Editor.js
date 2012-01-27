@@ -4,6 +4,7 @@ var Showdown = require('../public/markdown/showdown').converter,
 	AzureBlobService = require('../lib/azureBlobService'),
 	FileTreeHelper = require('../lib/FileTreeHelper.js');
 
+var imageNumber = 0;
 var template = fs.readFileSync("./edit/editor.html.mu", 'utf8');
 var defaultContent = function(name) {
 		return "# " + name + " page\n\nThis editor page is currently empty.\n\nYou can put some content in it with the editor on the right. As you do so, the document will update live on the left, and live for everyone else editing at the same time as you. Isn't that cool?\n\nThe text on the left is being rendered with markdown, so you can do all the usual markdown stuff like:\n\n- Bullet\n  - Points\n\n[links](http://google.com)\n\n[Go back to the main page](Main)";
@@ -195,5 +196,33 @@ Editor.prototype = {
 				res.send(getDirectChildsOf(directory, req.session.blobsInContainer.blobs));
 			}
 		}
+	},
+	
+	uploadFile: function(docName, model, dataURL, res) {
+		var self = this;
+		return model.getSnapshot(docName, function(error, data) {
+			if (error === 'Document does not exist') {
+			 return model.create(docName, 'text', function() {
+				var content = defaultContent(docName);
+				return model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
+					return self.render(content, docName, res);
+				});
+			 });
+			} else {
+				if (dataURL!=undefined) {
+					var binaryData = dataURL.split(',')[1];
+					var extension = dataURL.split(',')[0].split('/')[1].split(';')[0];
+					var fileName = './public/uploads/'+docName+(imageNumber++)+'.'+extension;
+					fs.writeFile(fileName, binaryData, 'base64', function (err) {
+  						if (err) return console.log(err);					  
+					});
+
+					var content = '![]('+fileName+')';
+					return model.applyOp(docName, { op: [ { i: content, p: 1 } ], v: 0 }, function() {
+						return self.render(content, docName, res);
+					});
+				}
+			}
+		});
 	}
 };

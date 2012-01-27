@@ -24,6 +24,8 @@
     <script src="/share/share.js"></script>
     <script src="/share/ace.js"></script>
 	
+	<!-- paste images -->
+	<script src="pasteImages/jquery-paste-images.js" type="text/javascript"></script>
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -52,9 +54,9 @@
 		  <div class="modal-body span5">
 			<div id="header" style="width:800px; height:30px">
 				<label style="width:170px; text-align:left">Select the blob:</label>
-				<input type="text" id="blobSelected" name="blobSelected" class="required" style="width:200px; height:25px" />
+				<input type="text" id="blobSelected" name="blobSelected" class="required" style="visibility:hidden" />
 			</div>
-			<div id="openBlobTreeContainer" style="width:250px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
+			<div id="openBlobTreeContainer" style="width:530px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
 		</div>
 		  <div class="modal-footer">
 			<input id="openBlobButton" class="btn primary submit" type="submit" value="Ok" />
@@ -71,9 +73,9 @@
 		  <div class="modal-body span5">
 			<div id="header" style="width:800px; height:30px">
 				<label style="width:170px; text-align:left">Select the folder:</label>
-				<input type="text" id="saveInfo" name="saveInfo" class="required" style="width:200px; height:25px" />
+				<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility: hidden" />
 			</div>
-			<div id="saveToBlobTreeContainer" style="width:250px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
+			<div id="saveToBlobTreeContainer" style="width:53px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
 		</div>
 		  <div class="modal-footer">
 			<input id="saveToBlobButton" class="btn primary submit" type="submit" value="Ok" />
@@ -168,7 +170,7 @@
 				rules:{
 					openFileInput: {
 					  required: true,
-					  accept: "markdown|md"
+					  accept: 'markdown|md'
 					}
 				}
 			});
@@ -229,6 +231,11 @@
 					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName + '{{{docName}}}' };
 					$("#saveInfo").val(JSON.stringify(saveInfo));
 				});
+			});
+			
+			$('html').pasteImageReader(function(results) {
+			  var dataURL = results.dataURL;
+			  $.post('../pasteimage', { 'docName': '{{{docName}}}' ,'dataURL': dataURL });
 			});
 		});
     </script>
