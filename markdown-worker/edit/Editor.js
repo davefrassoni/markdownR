@@ -15,6 +15,23 @@ function Editor(){
 	this.blobService = new AzureBlobService();
 }
 
+function addRootInPath(root, collection){
+	for(var key in collection){
+		var path = root + '/' + collection[key];
+		collection[key] = path;
+	}
+	return collection;
+}
+
+function getDirectChildsOf(directory, collection){
+	var toReturn = [];
+	for(var key in collection){
+		if(collection[key].indexOf(directory) != -1)
+			toReturn.push(collection[key]);
+	}
+	return toReturn;
+}
+
 Editor.prototype = {
 
 	render: function(content, docName, res) {
@@ -119,35 +136,31 @@ Editor.prototype = {
 	
 	listBlobStructure: function(directory, req, res){
 		var self = this;
-		directory = unescape(directory);
+		directory = unescape(directory).replace(/\/$/, '').trim();
 		if (!directory){
 			self.blobsInContainer = null;
 			self.blobService.getAllContainerNames(function(err, result){
 				if (!err){
-					var html = FileTreeHelper.generateContainersHtml(result);
-					res.send(html);
+					res.send(result);
 				}
 				else
 					console.log(err);
 			});
 		}
 		else{
-			directory = directory.replace(/\/$/, '').trim();
 			if(!req.session.blobsInContainer || req.session.blobsInContainer.containerName != directory.split('/')[0]){
 				self.blobService.getAllBlobsNamesInContainer(directory,function(err, result){
 					if (!err){
-						FileTreeHelper.addRootInPath(directory, result);
+						addRootInPath(directory, result);
 						req.session.blobsInContainer = { 'containerName': directory, 'blobs': result};
-						var html = FileTreeHelper.generateBlobsHtml(directory, result);
-						res.send(html);
+						res.send(getDirectChildsOf(directory, result));
 					}
 					else
 						console.log(err);
 				});
 			}
 			else{
-				var html = FileTreeHelper.generateBlobsHtml(directory, req.session.blobsInContainer.blobs);
-				res.send(html);
+				res.send(getDirectChildsOf(directory, req.session.blobsInContainer.blobs));
 			}
 		}
 	},
@@ -159,8 +172,7 @@ Editor.prototype = {
 			self.blobsInContainer = null;
 			self.blobService.getAllContainerNames(function(err, result){
 				if (!err){
-					var html = FileTreeHelper.generateContainersHtml(result);
-					res.send(html);
+					res.send(result);
 				}
 				else
 					console.log(err);
@@ -171,18 +183,16 @@ Editor.prototype = {
 			if(!req.session.blobsInContainer || req.session.blobsInContainer.containerName != directory.split('/')[0]){
 				self.blobService.getAllBlobsNamesInContainer(directory,function(err, result){
 					if (!err){
-						FileTreeHelper.addRootInPath(directory, result);
+						addRootInPath(directory, result);
 						req.session.blobsInContainer = { 'containerName': directory, 'blobs': result};
-						var html = FileTreeHelper.generateFoldersHtml(directory, result);
-						res.send(html);
+						res.send(getDirectChildsOf(directory, result));
 					}
 					else
 						console.log(err);
 				});
 			}
 			else{
-				var html = FileTreeHelper.generateFoldersHtml(directory, req.session.blobsInContainer.blobs);
-				res.send(html);
+				res.send(getDirectChildsOf(directory, req.session.blobsInContainer.blobs));
 			}
 		}
 	}

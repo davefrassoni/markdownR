@@ -46,7 +46,8 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
-			if( o.select == undefined) o.select = 'none';
+			if( o.showSelection == undefined) o.showSelection = false;
+			if( o.type == undefined) o.type = 'file';
 			
 			$(this).each( function() {
 				
@@ -54,6 +55,17 @@ if(jQuery) (function($){
 					$(c).addClass('wait');
 					$(".jqueryFileTree.start").remove();
 					$.post(o.script, { dir: t }, function(data) {
+						
+						// convert the JSON result to html
+						if (!t)
+							data = generateContainersHtml(data);
+						else{
+							if (o.type == 'file')
+								data = generateBlobsHtml(t, data);
+							else
+								data = generateFoldersHtml(t, data);
+						}
+						
 						$(c).find('.start').html('');
 						$(c).removeClass('wait').append(data);
 						if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
@@ -73,7 +85,7 @@ if(jQuery) (function($){
 								$(this).parent().find('UL').remove(); // cleanup
 								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
-								if (o.select == 'folders'){
+								if (o.showSelection && o.type == 'folder'){
 									$('ul.jqueryFileTree li.directory > a.selected').removeClass('selected');
 									$(this).addClass('selected');
 									h($(this).attr('rel'));
@@ -84,7 +96,7 @@ if(jQuery) (function($){
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
-							if (o.select == 'files'){
+							if (o.showSelection && o.type == 'file'){
 								$('ul.jqueryFileTree li.file > a.selected').removeClass('selected');
 								$(this).addClass('selected');
 							}

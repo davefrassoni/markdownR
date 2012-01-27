@@ -13,9 +13,10 @@
 	<script type="text/javascript" src="jquery/jquery.validate-1.9.min.js"></script>
 
 	<!-- tree file -->
-	<script type="text/javascript" src="jqueryFileTree/jqueryFileTree.js"></script>
 	<link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css">
-
+	<script type="text/javascript" src="jqueryFileTree/fileTreeHelper.js"></script>
+	<script type="text/javascript" src="jqueryFileTree/jqueryFileTree.js"></script>
+	
 	<!-- editor -->
 	<script src="markdown/showdown.js" type="text/javascript"></script>
     <script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -216,12 +217,12 @@
 			
 			// bindings
 			$('#modal-openFromBlob').bind('show', function(){
-				$('#openBlobTreeContainer').fileTree({ root: '', script: '../listBlobStructure', multiFolder: false, select: 'files' }, function(file) {
+				$('#openBlobTreeContainer').fileTree({ root: '', script: '../listBlobStructure', multiFolder: false, type: 'file', showSelection: true }, function(file) {
 					$("#blobSelected").val(file);
 				});
 			});
 			$('#modal-saveToBlob').bind('show', function(){
-				$('#saveToBlobTreeContainer').fileTree({ root: '', script: '../listBlobFolderStructure', multiFolder: false, select: 'folders' }, function(file) {
+				$('#saveToBlobTreeContainer').fileTree({ root: '', script: '../listBlobFolderStructure', multiFolder: false, type: 'folder', showSelection: true }, function(file) {
 					var fullPathArray = file.split('/');
 					var container = fullPathArray.shift();
 					var blobName = fullPathArray.toString().replace(/,/g,'/');
