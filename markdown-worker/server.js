@@ -1,19 +1,21 @@
 var express = require('express'),
 	sharejs = require('share'),
-	Editor = require('./edit/Editor.js'),
-	azure = require('azure');
+	Editor = require('./edit/Editor.js');
 
 var app = express.createServer();	
 
 // Configuration
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+  //app.set('views', __dirname + '/views');
+  //app.set('view engine', 'jade');
+  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname + '/public/jquery'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: "markdownr editor azure" }));
   app.use(app.router);
-  app.use(express.static(__dirname + '/'));
 });
 
 app.configure('development', function(){
@@ -27,9 +29,7 @@ app.configure('production', function(){
 
 // Routes
 
-process.env.EMULATED = true;
-var blobService = azure.createBlobService();
-var editor = new Editor(blobService);
+var editor = new Editor();
 
 app.get('/?', function(req, res, next) {
 	res.redirect('/new');
@@ -42,13 +42,14 @@ app.get('/:docName', function(req, res, next) {
 
 app.post('/openFile', function(req, res, next) {
 	var path = req.files.openFileInput.path;
-	var docName = req.files.openFileInput.name.split('.')[0];
 	editor.openFile(path, docName, app.model, res);
 });
 
 app.post('/openBlob', function(req, res) {
-	var containerName = req.body.containerSelect;
-	var blobName = req.body.blobSelect;
+	var containerName = req.body.blobSelected.split('/')[0];
+	var blobArray = req.body.blobSelected.split('/');
+	blobArray.shift();
+	var blobName = blobArray.toString().replace(/,/g,'/');
 	editor.openBlob(containerName, blobName, app.model, res);
 });
 
@@ -67,18 +68,9 @@ app.post('/saveBlob/:blobName', function(req, res, next) {
 	editor.saveBlob(blobName, app.model, res);
 });	
 
-app.post('/listAllContainers', function(req, res) {
-	editor.listAllContainers(res);
-});
-
 app.post('/listBlobStructure', function(req, res) {
 	var directory = req.body.dir;
-	editor.listBlobStructure(directory,res);
-});
-
-app.post('/listAllBlobs', function(req, res) {
-	var containerName = req.body.containerName;
-	editor.listAllBlobs(containerName, res);
+	editor.listBlobStructure(directory, req, res);
 });
 
 var options = {

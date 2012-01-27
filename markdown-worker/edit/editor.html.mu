@@ -1,20 +1,28 @@
 <html>
   <head>
     <title>MarkdownR {{name}}</title>
-    <link rel="stylesheet" type="text/css" href="/edit/style.css">
-    <script type="text/javascript" src="/lib/jquery-1.6.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="jquery/jquery-1.6.4.min.js"></script>
     
-	<!-- bootstrap -->
-	<link rel="stylesheet" type="text/css" href="/lib/bootstrap.min.css">
-	<script type="text/javascript" src="/lib/bootstrap-modal.js"></script>
-    <script type="text/javascript" src="/lib/bootstrap-dropdown.js"></script>
+	<!-- bootstrap  -->
+	<link rel="stylesheet" type="text/css" href="bootstrap/bootstrap.min.css">
+	<script type="text/javascript" src="bootstrap/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap-dropdown.js"></script>
 	
 	<!-- validation -->
-	<script type="text/javascript" src="/lib/jquery.validate-1.9.min.js"></script>
-	
+	<script type="text/javascript" src="jquery/jquery.validate-1.9.min.js"></script>
+
 	<!-- tree file -->
-	<script type="text/javascript" src="/lib/jqueryFileTree.js"></script>
-	<link rel="stylesheet" type="text/css" href="/lib/jqueryFileTree.css">
+	<script type="text/javascript" src="jqueryFileTree/jqueryFileTree.js"></script>
+	<link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css">
+
+	<!-- editor -->
+	<script src="markdown/showdown.js" type="text/javascript"></script>
+    <script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/share/share.js"></script>
+    <script src="/share/ace.js"></script>
+	
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -41,11 +49,14 @@
       </div>
 	  <form id="openBlobForm" action="../openBlob" method="post">
 		  <div class="modal-body span5">
-			<p>Select one of the blobs from your storage account:</p>
-			<div id="fileTreeContainer" style="width:200px; height:150px; border: solid 1px silver; background-attachment:scroll"  ></div>
+			<div id="header" style="width:800px; height:30px">
+				<label style="width:170px; text-align:left">Select a blobs from the list:</label>
+				<input type="text" id="blobSelected" name="blobSelected" class="required" style="width:200px; height:25px" />
+			</div>
+			<div id="fileTreeContainer" style="width:250px; height:200px; border: solid 1px silver; overflow: scroll;"  ></div>
 		</div>
 		  <div class="modal-footer">
-			<input id="openBlobButton" class="btn primary" type="submit" value="Ok" />
+			<input id="openBlobButton" class="btn primary submit" type="submit" value="Ok" />
 			<button id="closeBlobButton" class="btn secondary">Close</button>
 		  </div>
 	  </form>
@@ -92,12 +103,8 @@
     </div>
     <div id="editor" class="content">{{{content}}}</div>
     </div>
-	<script src="../lib/markdown/showdown.js" type="text/javascript"></script>
-    <script src="../lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/share/share.js"></script>
-    <script src="/share/ace.js"></script>
-    <script>
+
+	<script>
 	
 		$(document).ready(function() {
 		  var converter = new Showdown.converter();
@@ -129,8 +136,8 @@
 			});
 		
 			// file tree
-			$('#fileTreeContainer').fileTree({ root: '/', script: '../listBlobStructure' }, function(file) {
-				alert(file);
+			$('#fileTreeContainer').fileTree({ root: '', script: '../listBlobStructure', multiFolder: false }, function(file) {
+				$("#blobSelected").val(file);
 			});
 			
 			// forms validation
@@ -142,25 +149,36 @@
 					}
 				}
 			});
-		});
-
-		$('#openFileButton').click(function() {
-		  $('#modal-openFromFile').modal('hide');  
-		});
-		$('#openBlobButton').click(function() {
-		  $('#modal-openFromBlob').modal('hide');  
-		});
-		$('#openSettingsButton').click(function() {
-		  $('#modal-settings').modal('hide');
-		});
-		$('#closeFileButton').click(function() {
-		  $('#modal-openFromFile').modal('hide');
-		});
-		$('#closeBlobButton').click(function() {
-		  $('#modal-openFromBlob').modal('hide');
-		});
-		$('#closeSettingsButton').click(function() {
-		  $('#modal-settings').modal('hide');
+			
+			$('#openBlobForm').validate({
+				rules:{
+					blobSelected: {
+					  required: true
+					}
+				}
+			});
+			
+			// click events
+			$('#openFileButton').click(function() {
+			  if ($('#openFileForm').valid())
+				$('#modal-openFromFile').modal('hide');  
+			});
+			$('#openBlobButton').click(function() {
+			  if ($('#openBlobForm').valid()) 
+				$('#modal-openFromBlob').modal('hide');  
+			});
+			$('#openSettingsButton').click(function() {
+			  $('#modal-settings').modal('hide');
+			});
+			$('#closeFileButton').click(function() {
+			  $('#modal-openFromFile').modal('hide');
+			});
+			$('#closeBlobButton').click(function() {
+			  $('#modal-openFromBlob').modal('hide');
+			});
+			$('#closeSettingsButton').click(function() {
+			  $('#modal-settings').modal('hide');
+			});
 		});
     </script>
   </body>

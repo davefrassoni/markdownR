@@ -1,0 +1,30 @@
+body {
+	overflow: hidden;
+}
+
+#viewer {
+	margin: 0;
+	position: fixed;
+	overflow: scroll;
+	float: left;
+	top: 45px;
+	bottom: 0;
+	left: 50%;
+	width: 50%;
+	right: 0;
+}
+
+#view {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+#editor { 
+	margin: 0;
+	position: fixed;
+	top: 45px;
+	bottom: 0;
+	left: 0;
+	width: 50%;
+	right: 0;
+}
