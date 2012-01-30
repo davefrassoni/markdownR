@@ -65,7 +65,7 @@ Editor.prototype = {
 	},
 	
 	// open the file and save it as a new document
-	openFile: function(filePath, docName, model, res) {
+	openFile: function(filePath, model, req, res) {
 		var self = this;
 		var content = fs.readFileSync(filePath, 'utf8');
 		docName = req.files.openFileInput.name.split('.')[0];
@@ -197,32 +197,10 @@ Editor.prototype = {
 			}
 		}
 	},
-	
-	uploadFile: function(docName, model, dataURL, res) {
-		var self = this;
-		return model.getSnapshot(docName, function(error, data) {
-			if (error === 'Document does not exist') {
-			 return model.create(docName, 'text', function() {
-				var content = defaultContent(docName);
-				return model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
-					return self.render(content, docName, res);
-				});
-			 });
-			} else {
-				if (dataURL!=undefined) {
-					var binaryData = dataURL.split(',')[1];
-					var extension = dataURL.split(',')[0].split('/')[1].split(';')[0];
-					var fileName = './public/uploads/'+docName+(imageNumber++)+'.'+extension;
-					fs.writeFile(fileName, binaryData, 'base64', function (err) {
-  						if (err) return console.log(err);					  
-					});
 
-					var content = '![]('+fileName+')';
-					return model.applyOp(docName, { op: [ { i: content, p: 1 } ], v: 0 }, function() {
-						return self.render(content, docName, res);
-					});
-				}
-			}
+	uploadFile: function(fileName, model, dataURL, res) {
+		fs.writeFile(fileName, dataURL, 'base64', function (err) {
+				if (err) return console.log(err);					  
 		});
 	}
 };

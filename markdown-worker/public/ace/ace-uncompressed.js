@@ -7266,7 +7266,14 @@ var TextInput = function(parentNode, host) {
         // Some browsers support the event.clipboardData API. Use this to get
         // the pasted content which increases speed if pasting a lot of lines.
         if (e.clipboardData && e.clipboardData.getData) {
-            sendText(e.clipboardData.getData("text/plain"));
+            var copieddata=e.clipboardData.getData("text/plain");
+            if (copieddata==undefined) {
+                sendText(e.clipboardData.getData("base64"));    //CopyPasteDarren
+            }
+            else {
+                sendText(copieddata);
+            }
+            
             e.preventDefault();
         } 
         else {
