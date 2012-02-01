@@ -23,6 +23,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/share/share.js"></script>
     <script src="/share/ace.js"></script>
+    <script src="ace/theme-textmate.js" type="text/javascript"></script>
+    <script src="ace/mode-markdown.js" type="text/javascript"></script>
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -150,6 +152,8 @@
 				  return;
 				}
 				doc.attach_ace(editor);
+				editor.setTheme("ace/theme/textmate");
+      	  		editor.getSession().setMode(new (require("ace/mode/markdown").Mode)());
 				editor.setReadOnly(false);
 
 				var render = function() {

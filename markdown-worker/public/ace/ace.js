@@ -7261,32 +7261,31 @@ var TextInput = function(parentNode, host) {
         event.addListener(text, "input", onTextInput);
     
     event.addListener(text, "paste", function(e) {
-        // Mark that the next input text comes from past.
         pasted = true;
-        // Some browsers support the event.clipboardData API. Use this to get
-        // the pasted content which increases speed if pasting a lot of lines.
         if (e.clipboardData && e.clipboardData.getData) {
-            var copieddata = e.clipboardData.getData("text/plain");
-            if (copieddata == undefined) {
-                var file = e.clipboardData.items[0].getAsFile();
-                var reader = new FileReader();
-                var filename, dataURL;
-                reader.onload = function(evt) {
-                    var dataURL = evt.target.result;
-                    var binaryData = dataURL.split(',')[1];
-                    var extension = dataURL.split(',')[0].split('/')[1].split(';')[0];
-                    var randomnumber1=Math.floor(Math.random()*100001);
-                    var randomnumber2=Math.floor(Math.random()*100001);
-                    var fileName = './public/uploads/'+randomnumber1+'_'+randomnumber2+'.'+extension;
-                    $.post('../pasteimage', { 'fileName': fileName ,'dataURL': binaryData });
-                    sendText('![]('+fileName+')'); 
-                };
-                reader.readAsDataURL(file);
+            for(var i=0; i<e.clipboardData.items.length; i++) { 
+                if (e.clipboardData.items[i].type == "text/plain") {
+                    e.clipboardData.items[i].getAsString(function(data) {
+                        sendText(data);
+                    });
+                }
+                else if (i == 0) {
+                    file = e.clipboardData.items[i].getAsFile();
+                    var reader = new FileReader();
+                    var filename, dataURL;
+                    reader.onload = function(evt) {
+                        var dataURL = evt.target.result;
+                        var binaryData = dataURL.split(',')[1];
+                        var extension = dataURL.split(',')[0].split('/')[1].split(';')[0];
+                        var randomnumber1=Math.floor(Math.random()*100001);
+                        var randomnumber2=Math.floor(Math.random()*100001);
+                        var fileName = './public/uploads/'+randomnumber1+'_'+randomnumber2+'.'+extension;
+                        $.post('../pasteimage', { 'fileName': fileName ,'dataURL': binaryData });
+                        sendText('![]('+fileName+')'); 
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
-            else {
-                sendText(copieddata);
-            }
-            
             e.preventDefault();
         } 
         else {
