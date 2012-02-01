@@ -75,7 +75,7 @@
 				<label style="width:170px; text-align:left">Select the folder:</label>
 				<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility: hidden" />
 			</div>
-			<div id="saveToBlobTreeContainer" style="width:53px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
+			<div id="saveToBlobTreeContainer" style="width:530px; height:200px; border: solid 1px silver; overflow: scroll;" >Loading..</div>
 		</div>
 		  <div class="modal-footer">
 			<input id="saveToBlobButton" class="btn primary submit" type="submit" value="Ok" />
