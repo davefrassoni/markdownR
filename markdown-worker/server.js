@@ -1,6 +1,6 @@
 var express = require('express'),
 	sharejs = require('share'),
-	Editor = require('./edit/Editor.js'),
+	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
 var app = express.createServer();	
@@ -27,6 +27,7 @@ app.configure('production', function(){
 });
 
 // Create temp and upload folders, if not exist
+
 fs.stat('public/temp', function(err){
 	if (err){
 		fs.mkdir('public/temp', function(err){
@@ -57,7 +58,7 @@ app.get('/:docName', function(req, res, next) {
 	editor.openDocument(docName, app.model, res, next);
 });
 
-app.post('/openFile', function(req, res, next) {
+app.post('/openFile', function(req, res) {
 	var path = req.files.openFileInput.path;
 	editor.openFile(path, app.model, req, res);
 });
@@ -70,17 +71,17 @@ app.post('/openBlob', function(req, res) {
 	editor.openBlob(containerName, blobName, app.model, res);
 });
 
-app.get('/saveFile/:docName', function(req, res, next) {
-	var docName = req.params['docName'];
-	editor.saveDocumentToFile(docName, app.model, res, next);
+app.get('/saveFile/:docName', function(req, res) {
+	var docName = req.params.docName;
+	editor.saveDocumentToFile(docName, app.model, res);
 });
 
-app.get('/preview/:docName', function(req, res, next) {
-	var docName = req.params['docName'];
-	editor.preview(docName, app.model, res, next);
+app.get('/preview/:docName', function(req, res) {
+	var docName = req.params.docName;
+	editor.preview(docName, app.model, res);
 });
 
-app.post('/saveToBlob', function(req, res, next) {
+app.post('/saveToBlob', function(req, res) {
 	var saveInfo = JSON.parse(req.body.saveInfo);
 	editor.saveDocumentToBlob(saveInfo.documentName, saveInfo.container, saveInfo.blobName, app.model, res);
 });	
@@ -95,7 +96,7 @@ app.post('/listBlobFolderStructure', function(req, res) {
 	editor.listBlobStructure(directory, req, res, { 'showFiles': false });
 });
 
-app.post('/pasteimage', function(req, res, next) {
+app.post('/pasteimage', function(req, res) {
     var fileName = req.body.fileName;
 	var dataURL = req.body.dataURL;
     editor.uploadFile(fileName, app.model, dataURL, res);
