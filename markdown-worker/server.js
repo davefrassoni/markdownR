@@ -42,7 +42,7 @@ app.get('/:docName', function(req, res, next) {
 
 app.post('/openFile', function(req, res, next) {
 	var path = req.files.openFileInput.path;
-	editor.openFile(path, docName, app.model, res);
+	editor.openFile(path, app.model, req, res);
 });
 
 app.post('/openBlob', function(req, res) {
@@ -79,11 +79,10 @@ app.post('/listBlobFolderStructure', function(req, res) {
 });
 
 app.post('/pasteimage', function(req, res, next) {
-    var docName = req.body.docName;
+    var fileName = req.body.fileName;
 	var dataURL = req.body.dataURL;
-    editor.uploadFile(docName, app.model, dataURL, res);
+    editor.uploadFile(fileName, app.model, dataURL, res);
 });
-
 
 var options = {
   db: {type: 'none'},

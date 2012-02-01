@@ -23,9 +23,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/share/share.js"></script>
     <script src="/share/ace.js"></script>
-	
-	<!-- paste images -->
-	<script src="pasteImages/jquery-paste-images.js" type="text/javascript"></script>
+    <script src="ace/theme-textmate.js" type="text/javascript"></script>
+    <script src="ace/mode-markdown.js" type="text/javascript"></script>
   </head>
   <body>
 	  <div id="modal-openFromFile" class="modal hide fade">
@@ -132,10 +131,10 @@
       <div id="view">{{{markdown}}}</div>
     </div>
     <div id="editor" class="content">{{{content}}}</div>
-    </div>
-
+</td>
+    
+</div>
 	<script>
-	
 		$(document).ready(function() {
 		  var converter = new Showdown.converter();
 		  var view = document.getElementById('view');
@@ -153,6 +152,8 @@
 				  return;
 				}
 				doc.attach_ace(editor);
+				editor.setTheme("ace/theme/textmate");
+      	  		editor.getSession().setMode(new (require("ace/mode/markdown").Mode)());
 				editor.setReadOnly(false);
 
 				var render = function() {
@@ -231,11 +232,6 @@
 					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName + '{{{docName}}}' };
 					$("#saveInfo").val(JSON.stringify(saveInfo));
 				});
-			});
-			
-			$('html').pasteImageReader(function(results) {
-			  var dataURL = results.dataURL;
-			  $.post('../pasteimage', { 'docName': '{{{docName}}}' ,'dataURL': dataURL });
 			});
 		});
     </script>
