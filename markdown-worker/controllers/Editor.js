@@ -66,9 +66,13 @@ Editor.prototype = {
 		var content = fs.readFileSync(filePath, 'utf8');
 		docName = req.files.openFileInput.name.split('.')[0];
 		model.create(docName, 'text', function() {
-			model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
-				res.redirect('/' + docName);
-			});
+			if (!err){
+				model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
+					res.redirect('/' + docName);
+				});
+			}
+			else
+				console.log(err);
 		});
 	},
 
@@ -78,10 +82,14 @@ Editor.prototype = {
 		self.blobService.getBlobToText(containerName, blobName,  function(err, blob){
 			if (!err){
 				docName = blobName.split('/')[blobName.split('/').length - 1].split('.')[0];
-				model.create(docName, 'text', function() {
-					model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
-						res.redirect('/' + docName);
-					});
+				model.create(docName, 'text', function(err, result) {
+					if(!err){
+						model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
+							res.redirect('/' + docName);
+						});
+					}
+					else
+						console.log(err);
 				});
 			}
 			else

@@ -244,8 +244,8 @@
 				$('#saveToBlobTreeContainer').fileTree({ root: '', script: '../listBlobFolderStructure', multiFolder: false, type: 'folder', showSelection: true }, function(file) {
 					var fullPathArray = file.split('/');
 					var container = fullPathArray.shift();
-					var blobName = fullPathArray.toString().replace(/,/g,'/');
-					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName + '{{{docName}}}' };
+					var blobName = fullPathArray.toString().replace(/,/g,'/') + '{{{docName}}}'  + '.markdown';
+					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName  };
 					$("#saveInfo").val(JSON.stringify(saveInfo));
 				});
 			});
