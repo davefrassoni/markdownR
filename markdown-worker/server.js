@@ -1,14 +1,14 @@
 var express = require('express'),
 	sharejs = require('share'),
-	Editor = require('./edit/Editor.js');
+	Editor = require('./edit/Editor.js'),
+	fs = require('fs');
 
 var app = express.createServer();	
 
 // Configuration
 
 app.configure(function(){
-  //app.set('views', __dirname + '/views');
-  //app.set('view engine', 'jade');
+  app.set('views', __dirname + '/views');
   app.use(express.static(__dirname + '/public'));
   app.use(express.static(__dirname + '/'));
   app.use(express.bodyParser());
@@ -26,6 +26,23 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+// Create temp and upload folders, if not exist
+fs.stat('public/temp', function(err){
+	if (err){
+		fs.mkdir('public/temp', function(err){
+			if (err)
+				console.log(err);
+		});
+	}
+});
+fs.stat('public/uploads', function(err){
+	if (err){
+		fs.mkdir('public/uploads', function(err){
+			if (err)
+				console.log(err);
+		});
+	}
+});
 
 // Routes
 
@@ -69,13 +86,13 @@ app.post('/saveToBlob', function(req, res, next) {
 });	
 
 app.post('/listBlobStructure', function(req, res) {
-	var directory = req.body.dir;
+	var directory = unescape(req.body.dir);
 	editor.listBlobStructure(directory, req, res);
 });
 
 app.post('/listBlobFolderStructure', function(req, res) {
-	var directory = req.body.dir;
-	editor.listBlobFolderStructure(directory, req, res);
+	var directory = unescape(req.body.dir);
+	editor.listBlobStructure(directory, req, res, { 'showFiles': false });
 });
 
 app.post('/pasteimage', function(req, res, next) {

@@ -22,6 +22,7 @@
 //
 // History:
 //
+// 1.03 - added functionality to parse JSON objects
 // 1.02 - added 'selectable' option
 // 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
 // 1.00 - released (24 March 2008)
@@ -59,12 +60,8 @@ if(jQuery) (function($){
 						// convert the JSON result to html
 						if (!t)
 							data = generateContainersHtml(data);
-						else{
-							if (o.type == 'file')
-								data = generateBlobsHtml(t, data);
-							else
-								data = generateFoldersHtml(t, data);
-						}
+						else
+							data = generateBlobsHtml(data);
 						
 						$(c).find('.start').html('');
 						$(c).removeClass('wait').append(data);
@@ -85,6 +82,7 @@ if(jQuery) (function($){
 								$(this).parent().find('UL').remove(); // cleanup
 								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
+								// highlight selected folder
 								if (o.showSelection && o.type == 'folder'){
 									$('ul.jqueryFileTree li.directory > a.selected').removeClass('selected');
 									$(this).addClass('selected');
@@ -96,6 +94,7 @@ if(jQuery) (function($){
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
+							// highlight selected file
 							if (o.showSelection && o.type == 'file'){
 								$('ul.jqueryFileTree li.file > a.selected').removeClass('selected');
 								$(this).addClass('selected');

@@ -1,1 +1,0 @@
-path where the images will be uploaded

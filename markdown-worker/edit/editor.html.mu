@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="jquery/jquery.validate-1.9.min.js"></script>
 
 	<!-- tree file -->
-	<link rel="stylesheet" type="text/css" href="/jqueryFileTree/jqueryFileTree.css">
+	<link rel="stylesheet" type="text/css" href="jqueryFileTree/jqueryFileTree.css">
 	<script type="text/javascript" src="jqueryFileTree/fileTreeHelper.js"></script>
 	<script type="text/javascript" src="jqueryFileTree/jqueryFileTree.js"></script>
 	

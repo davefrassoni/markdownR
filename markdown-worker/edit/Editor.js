@@ -1,8 +1,9 @@
 var Showdown = require('../public/markdown/showdown').converter,
 	Mustache = require('mustache'),
 	fs = require('fs'),
-	AzureBlobService = require('../lib/azureBlobService'),
-	FileTreeHelper = require('../lib/FileTreeHelper.js');
+	AzureBlobService = require('../lib/azureBlobService');
+
+module.exports = Editor;
 
 var imageNumber = 0;
 var template = fs.readFileSync("./edit/editor.html.mu", 'utf8');
@@ -10,10 +11,14 @@ var defaultContent = function(name) {
 		return "# " + name + " page\n\nThis editor page is currently empty.\n\nYou can put some content in it with the editor on the right. As you do so, the document will update live on the left, and live for everyone else editing at the same time as you. Isn't that cool?\n\nThe text on the left is being rendered with markdown, so you can do all the usual markdown stuff like:\n\n- Bullet\n  - Points\n\n[links](http://google.com)\n\n[Go back to the main page](Main)";
     };
 
-module.exports = Editor;
 
 function Editor(){
 	this.blobService = new AzureBlobService();
+}
+
+function getChildsPath(fullPath){
+	fullPath.shift();
+	return fullPath.toString().replace(/,/g, '/');
 }
 
 function addRootInPath(root, collection){
@@ -22,15 +27,6 @@ function addRootInPath(root, collection){
 		collection[key] = path;
 	}
 	return collection;
-}
-
-function getDirectChildsOf(directory, collection){
-	var toReturn = [];
-	for(var key in collection){
-		if(collection[key].indexOf(directory) != -1)
-			toReturn.push(collection[key]);
-	}
-	return toReturn;
 }
 
 Editor.prototype = {
@@ -64,7 +60,7 @@ Editor.prototype = {
 		});
 	},
 	
-	// open the file and save it as a new document
+	// open a file and save it as a new document
 	openFile: function(filePath, model, req, res) {
 		var self = this;
 		var content = fs.readFileSync(filePath, 'utf8');
@@ -76,7 +72,7 @@ Editor.prototype = {
 		});
 	},
 
-	// open the blob and save it as a new document
+	// open a blob and save it as a new document
 	openBlob: function(containerName, blobName, model, res) {
 		var self = this;
 		self.blobService.getBlobToText(containerName, blobName,  function(err, blob){
@@ -104,20 +100,6 @@ Editor.prototype = {
 		});
 	},
 	
-	preview: function(docName, model, res){
-		var self = this;
-		return model.getSnapshot(docName, function(error, data) {
-			if (!error){
-				var markdown = (new Showdown()).makeHtml(data.snapshot);
-				var htmlData = { markdown: markdown, docName: docName };
-				previewHtml = fs.readFileSync("./edit/preview.html.mu", 'utf8');
-				var html = Mustache.to_html(previewHtml, htmlData);
-				res.writeHead(200, {'content-type': 'text/html'});
-				res.end(html);
-			}
-		});
-	},
-
 	saveDocumentToBlob: function(docName, container, blobPath, model, res) {
 		var self = this;
 		model.getSnapshot(docName, function(err, data){
@@ -135,43 +117,26 @@ Editor.prototype = {
 		});
 	},
 	
-	listBlobStructure: function(directory, req, res){
+	preview: function(docName, model, res){
 		var self = this;
-		directory = unescape(directory).replace(/\/$/, '').trim();
-		if (!directory){
-			self.blobsInContainer = null;
-			self.blobService.getAllContainerNames(function(err, result){
-				if (!err){
-					res.send(result);
-				}
-				else
-					console.log(err);
-			});
-		}
-		else{
-			if(!req.session.blobsInContainer || req.session.blobsInContainer.containerName != directory.split('/')[0]){
-				self.blobService.getAllBlobsNamesInContainer(directory,function(err, result){
-					if (!err){
-						addRootInPath(directory, result);
-						req.session.blobsInContainer = { 'containerName': directory, 'blobs': result};
-						res.send(getDirectChildsOf(directory, result));
-					}
-					else
-						console.log(err);
-				});
+		return model.getSnapshot(docName, function(error, data) {
+			if (!error){
+				var markdown = (new Showdown()).makeHtml(data.snapshot);
+				var htmlData = { markdown: markdown, docName: docName };
+				previewHtml = fs.readFileSync("./edit/preview.html.mu", 'utf8');
+				var html = Mustache.to_html(previewHtml, htmlData);
+				res.writeHead(200, {'content-type': 'text/html'});
+				res.end(html);
 			}
-			else{
-				res.send(getDirectChildsOf(directory, req.session.blobsInContainer.blobs));
-			}
-		}
+		});
 	},
 	
-	listBlobFolderStructure: function(directory, req, res){
+	listBlobStructure: function(directory, req, res, options){
 		var self = this;
-		directory = unescape(directory);
+		options = options || { 'showFiles': true };
+		
 		if (!directory){
-			self.blobsInContainer = null;
-			self.blobService.getAllContainerNames(function(err, result){
+			self.blobService.getContainerNames(function(err, result){
 				if (!err){
 					res.send(result);
 				}
@@ -180,21 +145,19 @@ Editor.prototype = {
 			});
 		}
 		else{
-			directory = directory.replace(/\/$/, '').trim();
-			if(!req.session.blobsInContainer || req.session.blobsInContainer.containerName != directory.split('/')[0]){
-				self.blobService.getAllBlobsNamesInContainer(directory,function(err, result){
-					if (!err){
-						addRootInPath(directory, result);
-						req.session.blobsInContainer = { 'containerName': directory, 'blobs': result};
-						res.send(getDirectChildsOf(directory, result));
-					}
-					else
-						console.log(err);
-				});
-			}
-			else{
-				res.send(getDirectChildsOf(directory, req.session.blobsInContainer.blobs));
-			}
+			var path = directory.split('/');
+			var containerName = path[0];
+			var prefix = getChildsPath(path);
+			var delimiter = '/';
+			
+			self.blobService.getBlobNames(containerName, prefix, delimiter, options, function(err, result){
+				if (!err){
+					addRootInPath(containerName, result);
+					res.send(result);
+				}
+				else
+					console.log(err);
+			});	
 		}
 	},
 

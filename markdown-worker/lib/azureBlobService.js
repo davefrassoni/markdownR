@@ -9,6 +9,7 @@ function AzureBlobService(){
 
 function obtainPropertyValue(collection, propertyName){
 	var names = [];
+	
 	for(var key in collection){
 		var item = collection[key];
 		if (item.hasOwnProperty(propertyName))
@@ -26,7 +27,7 @@ AzureBlobService.prototype = {
 		});
 	},
 	
-	getAllContainerNames: function(callback){
+	getContainerNames: function(callback){
 		var self = this;
 		self.blobService.listContainers(function(err, result){
 			if(!err){
@@ -38,12 +39,26 @@ AzureBlobService.prototype = {
 		});
 	},
 	
-	getAllBlobsNamesInContainer: function(containerName, callback){
+	getBlobNames: function(containerName, prefix, delimiter, options, callback){
 		var self = this;
-		self.blobService.listBlobs(containerName, function(err, result){
+		self.blobService.listBlobs(containerName,{ 'prefix': prefix, 'delimiter': delimiter} , function(err, result, resultCont, response){
 			if(!err){
-				var names = obtainPropertyValue(result, 'name');
-				callback(null, names);
+				
+				var childs = [];
+				
+				// Folders (if BlobPrefix contains one folder is a simple JSON. Otherwise is an array of JSONs)
+				if (response.body.Blobs.BlobPrefix && !response.body.Blobs.BlobPrefix.length)
+					childs.push(response.body.Blobs.BlobPrefix['Name']);
+				else
+					childs = obtainPropertyValue(response.body.Blobs.BlobPrefix, 'Name')
+				
+				// Files
+				if (options.showFiles){
+					var files = obtainPropertyValue(result, 'name');
+					childs = childs.concat(files);
+				}
+				
+				callback(null, childs);
 			}
 			else
 				callback(err, null);
