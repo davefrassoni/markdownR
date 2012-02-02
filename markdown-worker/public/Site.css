@@ -11,7 +11,7 @@ form{
 	position: fixed;
 	overflow: scroll;
 	float: left;
-	top: 45px;
+	top: 42px;
 	bottom: 0;
 	left: 50%;
 	width: 50%;
@@ -26,7 +26,7 @@ form{
 #editor { 
 	margin: 0;
 	position: fixed;
-	top: 45px;
+	top: 42px;
 	bottom: 0;
 	left: 0;
 	width: 50%;
