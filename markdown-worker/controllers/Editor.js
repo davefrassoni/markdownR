@@ -102,8 +102,10 @@ Editor.prototype = {
 		return model.getSnapshot(docName, function(error, data) {
 			if (!error){
 				var tempPath = 'public/temp/temp.markdown';
-				fs.writeFileSync(tempPath, data.snapshot);
-				res.download(tempPath, docName + '.markdown');
+				fs.open(tempPath,'w', function(){
+					fs.writeFileSync(tempPath, data.snapshot);
+					res.download(tempPath, docName + '.markdown');
+				});
 			}
 		});
 	},
