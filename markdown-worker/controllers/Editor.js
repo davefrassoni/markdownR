@@ -65,7 +65,7 @@ Editor.prototype = {
 		var self = this;
 		var content = fs.readFileSync(filePath, 'utf8');
 		docName = req.files.openFileInput.name.split('.')[0];
-		model.create(docName, 'text', function() {
+		model.create(docName, 'text', function(err, result) {
 			if (!err){
 				model.applyOp(docName, { op: [ { i: content, p: 0 } ], v: 0 }, function() {
 					res.redirect('/' + docName);
