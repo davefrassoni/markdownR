@@ -3,7 +3,6 @@ var azure = require('azure');
 module.exports = AzureBlobService;
 
 function AzureBlobService(){
-	process.env.EMULATED = true;
 	this.blobService = azure.createBlobService();
 }
 
