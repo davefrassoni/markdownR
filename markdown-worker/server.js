@@ -3,6 +3,8 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
+var tempPath = process.env.TEMP_STORE_PATH;
+		
 var app = express.createServer();	
 
 // Configuration
@@ -28,17 +30,9 @@ app.configure('production', function(){
 
 // Create temp and upload folders, if not exist
 
-fs.stat('public/temp', function(err){
+fs.stat(tempPath, function(err){
 	if (err){
-		fs.mkdir('public/temp', function(err){
-			if (err)
-				console.log(err);
-		});
-	}
-});
-fs.stat('public/uploads', function(err){
-	if (err){
-		fs.mkdir('public/uploads', function(err){
+		fs.mkdir(tempPath, function(err){
 			if (err)
 				console.log(err);
 		});
@@ -47,7 +41,7 @@ fs.stat('public/uploads', function(err){
 
 // Routes
 
-var editor = new Editor();
+var editor = new Editor(tempPath);
 
 app.get('/?', function(req, res, next) {
 	res.redirect('/new');
@@ -97,7 +91,7 @@ app.post('/listBlobFolderStructure', function(req, res) {
 });
 
 app.post('/pasteimage', function(req, res) {
-    var fileName = req.body.fileName;
+    var fileName = tempPath + req.body.fileName;
 	var dataURL = req.body.dataURL;
     editor.uploadFile(fileName, app.model, dataURL, res);
 });

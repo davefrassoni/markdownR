@@ -12,8 +12,9 @@ var defaultContent = function(name) {
     };
 
 
-function Editor(){
+function Editor(tempPath){
 	this.blobService = new AzureBlobService();
+	this.tempPath = tempPath;
 }
 
 function getChildsPath(fullPath){
@@ -80,20 +81,16 @@ Editor.prototype = {
 	openBlob: function(containerName, blobName, model, res) {
 		var self = this;
 		self.blobService.getBlobToText(containerName, blobName,  function(err, blob){
-			if (!err){
-				docName = blobName.split('/')[blobName.split('/').length - 1].split('.')[0];
-				model.create(docName, 'text', function(err, result) {
-					if(!err){
-						model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
-							res.redirect('/' + docName);
-						});
-					}
-					else
-						console.log(err);
+			if(!err){
+			docName = blobName.split('/')[blobName.split('/').length - 1].split('.')[0];
+			model.create(docName, 'text', function(err, result) {
+				model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
+					res.redirect('/' + docName);
 				});
+			});
 			}
 			else
-				console.log(err);
+				console.log('mariano');
 		});
 	},
 	
@@ -101,7 +98,7 @@ Editor.prototype = {
 		var self = this;
 		return model.getSnapshot(docName, function(error, data) {
 			if (!error){
-				var tempPath = 'public/temp/temp.markdown';
+				var tempPath = self.tempPath + 'temp.markdown';
 				fs.open(tempPath,'w', function(){
 					fs.writeFileSync(tempPath, data.snapshot);
 					res.download(tempPath, docName + '.markdown');
@@ -172,7 +169,8 @@ Editor.prototype = {
 	},
 
 	uploadFile: function(fileName, model, dataURL, res) {
-		fs.writeFile(fileName, dataURL, 'base64', function (err) {
+		var filePath = this.tempPath + fileName;
+		fs.writeFile(filePath, dataURL, 'base64', function (err) {
 				if (err) return console.log(err);					  
 		});
 	}
