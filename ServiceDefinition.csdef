@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <ServiceDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="markdownr" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
   <WorkerRole name="markdown-worker">
+    <Startup>
+      <Task commandLine="setup_environment_variables.cmd" executionContext="elevated" />
+    </Startup>
+    <LocalResources>
+      <LocalStorage name="tempStore" sizeInMB="100" />
+    </LocalResources>
     <Endpoints>
       <InputEndpoint name="HttpIn" protocol="tcp" port="8081" />
     </Endpoints>
