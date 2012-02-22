@@ -6,13 +6,13 @@
   "author": "Dario Renzulli <dario.renzulli@southworks.net>",
   "contributors": [ "Mariano Vazquez <mariano.vazquez@southworks.net" ],
   "dependencies": {
-    "share": "*",
+    "share": "https://github.com/southworksinc/ShareJS/tarball/master",
     "coffee-script": "> 1.1.0",
     "mustache": "*",
-	"azure": "0.5.1",
+	"azure": "*",
 	"express": "*"
   },
-  "engine": "node >= 0.7.1",
+  "engine": "node >= 0.4.7",
   "repository": {
     "type": "git",
     "url": "http://github.com/southworksinc/markdownR.git"
