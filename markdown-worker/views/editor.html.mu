@@ -25,6 +25,8 @@
     <script type="text/javascript" src="ace/theme-textmate.js"></script>
     <script type="text/javascript" src="ace/mode-markdown.js"></script>
 	
+	<script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+	
 	<!-- markdown -->
 	<link rel="stylesheet" type="text/css" href="Site.css">
   </head>
@@ -248,6 +250,19 @@
 					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName  };
 					$("#saveInfo").val(JSON.stringify(saveInfo));
 				});
+			});
+			
+			$('#openBlobForm')
+				.ajaxForm({
+				url : '../openBlob', 
+				dataType : 'json',
+				success : function (response) {
+					if (response.errorMessage != null){
+						alert(response.errorMessage);
+					}
+					
+					window.location = response.url;
+				},
 			});
 		});
     </script>

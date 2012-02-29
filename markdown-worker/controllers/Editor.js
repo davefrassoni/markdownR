@@ -82,15 +82,20 @@ Editor.prototype = {
 		var self = this;
 		self.blobService.getBlobToText(containerName, blobName,  function(err, blob){
 			if(!err){
-			docName = blobName.split('/')[blobName.split('/').length - 1].split('.')[0];
-			model.create(docName, 'text', function(err, result) {
-				model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
-					res.redirect('/' + docName);
+				docName = blobName.split('/')[blobName.split('/').length - 1].split('.')[0];
+				var data = {url: '/' + docName };
+				model.create(docName, 'text', function(err, result) {
+					if (!err){
+						model.applyOp(docName, { op: [ { i: blob, p: 0 } ], v: 0 }, function() {
+							res.json(data);
+						});	
+					}
+					else{
+						data.errorMessage = err;
+						res.json(data);
+					}
 				});
-			});
 			}
-			else
-				console.log('mariano');
 		});
 	},
 	
