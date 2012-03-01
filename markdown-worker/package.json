@@ -6,7 +6,7 @@
   "author": "Dario Renzulli <dario.renzulli@southworks.net>",
   "contributors": [ "Mariano Vazquez <mariano.vazquez@southworks.net" ],
   "dependencies": {
-    "share": "https://github.com/southworksinc/ShareJS/tarball/master",
+    "share": "https://github.com/nanovazquez/ShareJS/tarball/master",
     "coffee-script": "> 1.1.0",
     "mustache": "*",
 	"azure": "*",
