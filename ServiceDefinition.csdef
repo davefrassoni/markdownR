@@ -8,7 +8,7 @@
       <LocalStorage name="tempStore" sizeInMB="100" />
     </LocalResources>
     <Endpoints>
-      <InputEndpoint name="HttpIn" protocol="tcp" port="8081" />
+      <InputEndpoint name="HttpIn" protocol="tcp" port="80" />
     </Endpoints>
     <Runtime>
       <Environment>

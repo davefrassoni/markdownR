@@ -98,7 +98,7 @@ app.post('/pasteimage', function(req, res) {
 
 var options = {
   db: {type: 'none'},
-  port: 8081
+  port: process.env.port
 };
 
 sharejs.server.attach(app, options);
