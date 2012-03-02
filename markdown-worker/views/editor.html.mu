@@ -38,7 +38,7 @@
   		</div>
 		<form id="openFileForm" action="../openFile" method="post" enctype="multipart/form-data">
 			<div id="openFileContainer" class="modal-body">
-			  <p>Select the File:</p>
+			  <p>Select a File:</p>
 				<input id="openFileInput" name="openFileInput" type="file" />
 			</div>
 			<div class="modal-footer">
@@ -64,6 +64,23 @@
 		  </div>
 	  </form>
     </div>
+	<div id="modal-openFromGithub" class="modal hide fade">
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Open from github</h3>
+      </div>
+	  <form id="openGithubForm" action="../openBlob" method="post">
+		  <div id="openGithubContainer" class="modal-body">
+			<p>Select a file:</p>
+			<div id="openGithubTreeContainer" class="treeContainer" >Loading..</div>
+			<input type="text" id="githubFileSelected" name="githubFileSelected" class="required" style="visibility:hidden;height:0px; padding: 0;" />
+		  </div>
+		  <div class="modal-footer">
+			<input id="openGithubButton" class="btn primary submit" type="submit" value="Ok" />
+			<button id="closeOpenGithubButton" class="btn secondary">Close</button>
+		  </div>
+	  </form>
+    </div>
 	<div id="modal-saveToBlob" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close">&times;</a>
@@ -78,6 +95,23 @@
 		<div class="modal-footer">
 			<input id="saveToBlobButton" class="btn primary submit" type="submit" value="Ok" />
 			<button id="closeSaveToBlobButton" class="btn secondary">Close</button>
+	    </div>
+	  </form>
+    </div>
+	<div id="modal-saveToGithub" class="modal hide fade">
+      <div class="modal-header">
+        <a href="#" class="close">&times;</a>
+        <h3>Save File</h3>
+      </div>
+	  <form id="saveToGithubForm" action="../saveToGithub" method="post">
+		<div id="saveToGithubContainer" class="modal-body">
+			<p>Select a folder:</p>
+			<div id="saveToGithubTreeContainer" class="treeContainer" >Loading..</div>
+			<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
+		</div>
+		<div class="modal-footer">
+			<input id="saveToGithubButton" class="btn primary submit" type="submit" value="Ok" />
+			<button id="closeSaveToGithubButton" class="btn secondary">Close</button>
 	    </div>
 	  </form>
     </div>
@@ -105,8 +139,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="#" data-controls-modal="modal-openFromFile" data-backdrop="true" data-keyboard="true">From File System</a></li>
                   <li><a href="#" data-controls-modal="modal-openFromBlob" data-backdrop="true" data-keyboard="true">From Blob Storage</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">From GitHub</a></li>
+                  <li><a href="#" data-controls-modal="modal-openFromGithub" data-backdrop="true" data-keyboard="true">From Github</a></li>
                 </ul>
               </li>
 			  <li class="dropdown" data-dropdown="dropdown" >
@@ -114,8 +147,7 @@
                 <ul class="dropdown-menu">
                   <li><a id='saveToFileButton' href='../saveFile/{{{docName}}}'>To your local disk</a></li>
                   <li><a href="#" data-controls-modal="modal-saveToBlob" data-backdrop="true" data-keyboard="true">To Blob Storage</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">To GitHub</a></li>
+                  <li><a href="#" data-controls-modal="modal-saveToGithub" data-backdrop="true" data-keyboard="true">To Github</a></li>
                 </ul>
               </li>
               <li><a id='openPreviewButton' href='../preview/{{{docName}}}'>Preview</a></li>
@@ -207,10 +239,39 @@
 				}
 			});
 			
+			$('#openGithubForm').validate({
+				rules:{
+					githubFileSelected: {
+					  required: true
+					}
+				},
+				messages: {
+					githubFileSelected: {
+						required: "You have to select a file"
+					}
+				}
+			});
+			
+			$('#saveToGithubForm').validate({
+				rules:{
+					saveInfo: {
+					  required: true
+					}
+				},
+				messages: {
+					saveInfo: {
+						required: "You have to select a folder"
+					}
+				}
+			});
+			
 			// click events
 			$('#openFileButton').click(function() {
 			  if ($('#openFileForm').valid())
 				$('#modal-openFromFile').modal('hide');  
+			});
+			$('#closeFileButton').click(function() {
+			  $('#modal-openFromFile').modal('hide');
 			});
 			$('#openBlobButton').click(function() {
 			  if ($('#openBlobForm').valid()) 
@@ -226,11 +287,22 @@
 			$('#closeSaveToBlobButton').click(function() {
 			  $('#modal-openFromBlob').modal('hide');
 			});
+			$('#openGithubButton').click(function() {
+			  if ($('#openGithubForm').valid()) 
+				$('#modal-openFromGithub').modal('hide');  
+			});
+			$('#closeOpenGithubButton').click(function() {
+			  $('#modal-openFromGithub').modal('hide');
+			});
+			$('#saveToGithubButton').click(function() {
+			  if ($('#saveToBlobForm').valid()) 
+				$('#modal-saveToGithub').modal('hide');  
+			});
+			$('#closeSaveToGithubButton').click(function() {
+			  $('#modal-saveToGithub').modal('hide');
+			});
 			$('#openSettingsButton').click(function() {
 			  $('#modal-settings').modal('hide');
-			});
-			$('#closeFileButton').click(function() {
-			  $('#modal-openFromFile').modal('hide');
 			});
 			$('#closeSettingsButton').click(function() {
 			  $('#modal-settings').modal('hide');
@@ -248,6 +320,21 @@
 					var container = fullPathArray.shift();
 					var blobName = fullPathArray.toString().replace(/,/g,'/') + '{{{docName}}}'  + '.markdown';
 					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName  };
+					$("#saveInfo").val(JSON.stringify(saveInfo));
+				});
+			});
+			
+			$('#modal-openFromGithub').bind('show', function(){
+				$('#openGithubTreeContainer').fileTree({ root: '', script: '../listGithubStructure', multiFolder: false, type: 'file', showSelection: true }, function(file) {
+					$("#githubFileSelected").val(file);
+				});
+			});
+			$('#modal-saveToGithub').bind('show', function(){
+				$('#saveToGithubTreeContainer').fileTree({ root: '', script: '../listGithubFolderStructure', multiFolder: false, type: 'folder', showSelection: true }, function(file) {
+					var fullPathArray = file.split('/');
+					var container = fullPathArray.shift();
+					var githubFileName = fullPathArray.toString().replace(/,/g,'/') + '{{{docName}}}'  + '.markdown';
+					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'githubFileName': githubFileName  };
 					$("#saveInfo").val(JSON.stringify(saveInfo));
 				});
 			});
