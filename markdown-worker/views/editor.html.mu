@@ -101,7 +101,7 @@
 	<div id="modal-saveToGithub" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close">&times;</a>
-        <h3>Save File</h3>
+        <h3>Save to github</h3>
       </div>
 	  <form id="saveToGithubForm" action="../saveToGithub" method="post">
 		<div id="saveToGithubContainer" class="modal-body">
@@ -285,7 +285,7 @@
 				$('#modal-saveToBlob').modal('hide');  
 			});
 			$('#closeSaveToBlobButton').click(function() {
-			  $('#modal-openFromBlob').modal('hide');
+			  $('#modal-saveToBlob').modal('hide');
 			});
 			$('#openGithubButton').click(function() {
 			  if ($('#openGithubForm').valid()) 
@@ -295,7 +295,7 @@
 			  $('#modal-openFromGithub').modal('hide');
 			});
 			$('#saveToGithubButton').click(function() {
-			  if ($('#saveToBlobForm').valid()) 
+			  if ($('#saveToGithubForm').valid()) 
 				$('#modal-saveToGithub').modal('hide');  
 			});
 			$('#closeSaveToGithubButton').click(function() {
