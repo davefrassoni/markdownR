@@ -175,7 +175,7 @@
 		  editor.session.setUseWrapMode(true);
 		  editor.setShowPrintMargin(false);
 
-		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + 8081 + '/sjs');
+		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/sjs');
 
 			connection.open('{{{docName}}}', function(error, doc) {
 				if (error) {
