@@ -3,8 +3,11 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-var tempPath = process.env.TEMP_STORE_PATH;
-		
+var tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
+
+// for development purposes only
+process.env.EMULATED = !(process.env.AZURE_STORAGE_ACCOUNT);
+	
 var app = express.createServer();	
 
 // Configuration
