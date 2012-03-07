@@ -1,1 +1,3 @@
 /node_modules
+/azure-deploy/local_package.csx
+/azure-deploy/markdown-worker

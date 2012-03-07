@@ -3,6 +3,13 @@
   <WorkerRole name="markdown-worker">
     <Startup>
       <Task commandLine="setup_environment_variables.cmd" executionContext="elevated" />
+      <Task commandLine="install_nodemodules.cmd" executionContext="elevated">
+        <Environment>
+          <Variable name="EMULATED">
+            <RoleInstanceValue xpath="/RoleEnvironment/Deployment/@emulated" />
+          </Variable>
+        </Environment>
+      </Task>
     </Startup>
     <LocalResources>
       <LocalStorage name="tempStore" sizeInMB="100" />
