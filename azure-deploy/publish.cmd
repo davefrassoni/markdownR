@@ -1,0 +1,2 @@
+REM create a script that copies ..\src to . and so that we keep things separate and this works fine locally in any platform and cloud env.
+REM This script should be used only before publishing and debuggin should be done on the "src" folder using usual node stuff (and optionally turn on azure emulator for blob storage)

@@ -1,0 +1,2 @@
+[Reflection.Assembly]::LoadWithPartialName("Microsoft.WindowsAzure.ServiceRuntime")
+[Environment]::SetEnvironmentVariable("TEMP_STORE_PATH", [Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment]::GetLocalResource("tempStore").RootPath, "Machine")

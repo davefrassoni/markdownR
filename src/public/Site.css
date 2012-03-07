@@ -1,0 +1,73 @@
+body {
+	overflow: hidden;
+}
+
+form{
+	height: 1px;
+}
+
+#viewer {
+	margin: 0;
+	position: fixed;
+	overflow: scroll;
+	float: left;
+	top: 42px;
+	bottom: 0;
+	left: 50%;
+	width: 50%;
+	right: 0;
+}
+
+#view {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+#editor { 
+	margin: 0;
+	position: fixed;
+	top: 42px;
+	bottom: 0;
+	left: 0;
+	width: 50%;
+	right: 0;
+}
+
+.error{
+	color: #b94a48;
+	font-size: 13px;
+	font-weight: bold;
+	width:90%;
+	text-align:left;
+	height:25px;
+}
+
+input[type="file"]{
+	width:100%;
+	size: 50;
+	color: gray;
+	font-size: 13px;
+	font-weight: normal;
+}
+
+#openFileContainer{
+	height: 80px;
+}
+
+#openBlobContainer{
+	height: 200px;
+}
+
+#saveToBlobContainer{
+	height: 200px;
+}
+
+.treeContainer{
+	width:100%; 
+	height:150px;
+	border: solid 1px silver; 
+	overflow: scroll;
+}
+
+
+
