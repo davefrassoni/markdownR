@@ -173,18 +173,28 @@ Editor.prototype = {
 		}
 	},
 
+	getBlobStoragePath: function(req, res) {
+		var blobName = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
+		res.json({ blobPath: blobName });
+	},
+
 	saveStreamToBlob: function(fileName, dataURL, model, res) {
 		var self = this;
-
+		var container = 'images';
 		var filePath = self.tempPath + fileName;
 		fs.writeFile(filePath, dataURL, 'base64', function (err) {
 			if (err) {
 				return console.log(err);
 			}
 			else {
+				self.blobService.createContainerIfNotExists(container, function(err){
+					if(err){
+						console.log(err);
+					}
+				});
 				var readStream = fs.createReadStream(filePath);
 				var stat = fs.statSync(filePath);
-				self.blobService.uploadImageToBlob(process.env.AZURE_STORAGE_IMAGECONTAINER, fileName, readStream, stat.size, function(err, result){
+				self.blobService.uploadImageToBlob(container, fileName, readStream, stat.size, function(err, result){
 					if(err) {
 						console.log(err);
 					}

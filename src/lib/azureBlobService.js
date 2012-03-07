@@ -3,7 +3,7 @@ var azure = require('azure');
 module.exports = AzureBlobService;
 
 function AzureBlobService(){
-	this.blobService = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
+	this.blobService = azure.createBlobService();
 }
 
 function obtainPropertyValue(collection, propertyName){
@@ -72,6 +72,15 @@ AzureBlobService.prototype = {
 			}
 			else
 				callback(err, null);
+		});
+	},
+
+	createContainerIfNotExists: function(container, callback) {
+		var self = this;
+		self.blobService.createContainerIfNotExists(container, {publicAccessLevel : 'blob'}, function(error) {
+			if(error) {
+				callback(error, null);
+			}
 		});
 	},
 

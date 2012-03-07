@@ -50,6 +50,10 @@ app.get('/?', function(req, res, next) {
 	res.redirect('/new');
 });
 
+app.get('/getBlobStoragePath', function(req, res, next) {
+	editor.getBlobStoragePath(req, res);
+});
+
 app.get('/:docName', function(req, res, next) {
 	var docName = req.params.docName;
 	editor.openDocument(docName, app.model, res, next);

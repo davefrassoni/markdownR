@@ -7280,16 +7280,18 @@ var TextInput = function(parentNode, host) {
                         var randomnumber1=Math.floor(Math.random()*100001);
                         var randomnumber2=Math.floor(Math.random()*100001);
                         var filename = randomnumber1+''+randomnumber2+'.'+extension;
-                        //var blobName = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/'+process.env.AZURE_STORAGE_IMAGECONTAINER+'/' + filename;
-                        var blobName = 'http://markdownr.blob.core.windows.net/images/' + filename;
-                        $.post('../pasteimage', { 'fileName': filename ,'dataURL': binaryData });
-                        sendText('![]('+blobName+')'); 
+                        var blobName = '';
+                        $.get('../getBlobStoragePath', function(data) {
+                            blobName = data.blobPath + filename;
+                            $.post('../pasteimage', { 'fileName': filename ,'dataURL': binaryData });
+                            sendText('![]('+blobName+')'); 
+                        });
                     };
                     reader.readAsDataURL(file);
                 }
             }
             e.preventDefault();
-        } 
+        }
         else {
             // If a browser doesn't support any of the things above, use the regular
             // method to detect the pasted input.
