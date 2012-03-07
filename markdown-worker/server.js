@@ -4,9 +4,10 @@ var express = require('express'),
 	fs = require('fs');
 
 // for development purposes only, we use the "TEMP/" path and emulated in true
+// TODO: we should not need a temp path
 var tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
 process.env.EMULATED = !(process.env.AZURE_STORAGE_ACCOUNT);
-
+var port = process.env.port || 8081;
 var app = express.createServer();	
 
 // Configuration
@@ -18,7 +19,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ secret: "markdownr editor azure" }));
+  app.use(express.session({ secret: "markdownr editor" }));
   app.use(app.router);
 });
 
@@ -100,13 +101,13 @@ app.post('/pasteimage', function(req, res) {
 
 var options = {
   db: {type: 'none'},
-  port: process.env.port
+  port: port
 };
 
 sharejs.server.attach(app, options);
 
 app.listen(options.port);
-console.log("Demos running at http://localhost:" + options.port);
+console.log("MarkdownR running at http://localhost:" + options.port);
 
 process.title = 'markdownr'
 process.on('uncaughtException', function (err) {
