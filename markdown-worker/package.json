@@ -1,10 +1,10 @@
 {
   "name": "MarkdownR",
   "version": "0.0.1",
-  "description": "A new markdown editor",
+  "description": "A collabrative realtime markdown editor that supports open/save from GitHubv3 API and Windows Azure Blob Storage",
   "keywords": ["markdown", "editor", "collaborative", "database", "server"],
-  "author": "Dario Renzulli <dario.renzulli@southworks.net>",
-  "contributors": [ "Mariano Vazquez <mariano.vazquez@southworks.net" ],
+  "author": "Southworks <markdownr@southworks.net>",
+  "contributors": [ "Juan Pablo Garcia <juanpablo.garcia@southworks.net>", "Alejandro Jezierski <alejandro.jezierski@southworks.net>", "Mauro Krikorian <mauro.krikorian@southworks.net>", "Dario Renzulli <dario.renzulli@southworks.net>", "Mariano Vazquez <mariano.vazquez@southworks.net>", "Matias Woloski <matias.woloski@southworks.net>" ],
   "dependencies": {
     "share": "https://github.com/nanovazquez/ShareJS/tarball/master",
     "coffee-script": "> 1.1.0",
