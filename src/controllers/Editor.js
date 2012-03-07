@@ -198,6 +198,9 @@ Editor.prototype = {
 					if(err) {
 						console.log(err);
 					}
+					else {
+						res.send(result);
+					}
 				});
 			}
 		});

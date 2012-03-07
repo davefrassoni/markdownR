@@ -7283,8 +7283,9 @@ var TextInput = function(parentNode, host) {
                         var blobName = '';
                         $.get('../getBlobStoragePath', function(data) {
                             blobName = data.blobPath + filename;
-                            $.post('../pasteimage', { 'fileName': filename ,'dataURL': binaryData });
-                            sendText('![]('+blobName+')'); 
+                            $.post('../pasteimage', { 'fileName': filename ,'dataURL': binaryData }, function(data) {
+                                sendText('![]('+blobName+')'); 
+                            });
                         });
                     };
                     reader.readAsDataURL(file);
