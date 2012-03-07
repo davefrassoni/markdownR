@@ -3,7 +3,7 @@ var azure = require('azure');
 module.exports = AzureBlobService;
 
 function AzureBlobService(){
-	this.blobService = azure.createBlobService();
+	this.blobService = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
 }
 
 function obtainPropertyValue(collection, propertyName){
@@ -37,6 +37,17 @@ AzureBlobService.prototype = {
 				callback(err, null);
 		});
 	},
+
+	getBlobPath: function(containerName, blob, callback){
+		var self = this;
+		self.blobService.getBlobUrl(containerName, blob, function(err, result){
+			if(!err){
+				callback(null, result);
+			}
+			else
+				callback(err, null);
+		});
+	},
 	
 	getBlobNames: function(containerName, prefix, delimiter, options, callback){
 		var self = this;
@@ -59,6 +70,16 @@ AzureBlobService.prototype = {
 				
 				callback(null, childs);
 			}
+			else
+				callback(err, null);
+		});
+	},
+
+	uploadImageToBlob: function(container, blob, stream, streamLength, callback) {
+		var self = this;
+		self.blobService.createBlockBlobFromStream(container, blob, stream, streamLength, function(err, result){
+			if(!err)
+				callback(null, result);
 			else
 				callback(err, null);
 		});

@@ -7269,19 +7269,21 @@ var TextInput = function(parentNode, host) {
                         sendText(data);
                     });
                 }
-                else if (i == 0) {
+                else {
                     file = e.clipboardData.items[i].getAsFile();
                     var reader = new FileReader();
-                    var filename, dataURL;
+                    var dataURL;
                     reader.onload = function(evt) {
                         var dataURL = evt.target.result;
                         var binaryData = dataURL.split(',')[1];
                         var extension = dataURL.split(',')[0].split('/')[1].split(';')[0];
                         var randomnumber1=Math.floor(Math.random()*100001);
                         var randomnumber2=Math.floor(Math.random()*100001);
-                        var fileName = './public/uploads/'+randomnumber1+'_'+randomnumber2+'.'+extension;
-                        $.post('../pasteimage', { 'fileName': fileName ,'dataURL': binaryData });
-                        sendText('![]('+fileName+')'); 
+                        var filename = randomnumber1+''+randomnumber2+'.'+extension;
+                        //var blobName = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/'+process.env.AZURE_STORAGE_IMAGECONTAINER+'/' + filename;
+                        var blobName = 'http://markdownr.blob.core.windows.net/images/' + filename;
+                        $.post('../pasteimage', { 'fileName': filename ,'dataURL': binaryData });
+                        sendText('![]('+blobName+')'); 
                     };
                     reader.readAsDataURL(file);
                 }

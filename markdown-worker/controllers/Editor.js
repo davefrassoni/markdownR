@@ -173,10 +173,23 @@ Editor.prototype = {
 		}
 	},
 
-	uploadFile: function(fileName, model, dataURL, res) {
-		var filePath = this.tempPath + fileName;
+	saveStreamToBlob: function(fileName, dataURL, model, res) {
+		var self = this;
+
+		var filePath = self.tempPath + fileName;
 		fs.writeFile(filePath, dataURL, 'base64', function (err) {
-				if (err) return console.log(err);					  
+			if (err) {
+				return console.log(err);
+			}
+			else {
+				var readStream = fs.createReadStream(filePath);
+				var stat = fs.statSync(filePath);
+				self.blobService.uploadImageToBlob(process.env.AZURE_STORAGE_IMAGECONTAINER, fileName, readStream, stat.size, function(err, result){
+					if(err) {
+						console.log(err);
+					}
+				});
+			}
 		});
 	}
 };

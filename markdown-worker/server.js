@@ -6,7 +6,7 @@ var express = require('express'),
 // for development purposes only, we use the "TEMP/" path and emulated in true
 var tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
 process.env.EMULATED = !(process.env.AZURE_STORAGE_ACCOUNT);
-	
+
 var app = express.createServer();	
 
 // Configuration
@@ -93,9 +93,9 @@ app.post('/listBlobFolderStructure', function(req, res) {
 });
 
 app.post('/pasteimage', function(req, res) {
-    var fileName = tempPath + req.body.fileName;
+    var fileName = req.body.fileName;
 	var dataURL = req.body.dataURL;
-    editor.uploadFile(fileName, app.model, dataURL, res);
+    editor.saveStreamToBlob(fileName, dataURL, app.model, res);
 });
 
 var options = {
