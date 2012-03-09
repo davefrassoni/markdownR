@@ -173,11 +173,6 @@ Editor.prototype = {
 		}
 	},
 
-	getBlobStoragePath: function(req, res) {
-		var blobName = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
-		res.json({ blobPath: blobName });
-	},
-
 	saveStreamToBlob: function(fileName, dataURL, model, res) {
 		var self = this;
 		var container = 'images';
@@ -199,6 +194,7 @@ Editor.prototype = {
 						console.log(err);
 					}
 					else {
+						fs.unlink(filePath);
 						res.send(result);
 					}
 				});

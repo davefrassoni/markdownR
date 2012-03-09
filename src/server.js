@@ -3,11 +3,25 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-// for development purposes only, we use the "TEMP/" path and emulated in true
-// TODO: we should not need a temp path
-var tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
-process.env.EMULATED = !(process.env.AZURE_STORAGE_ACCOUNT);
+if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
+	console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+	throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+}
+
+var	blobStoragePath = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
+var	tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
+
+if(process.env.EMULATED == undefined) {
+	process.env.EMULATED = false;
+} 
+
 var port = process.env.port || 8081;
+
+if(process.env.EMULATED == true) {
+	blobStoragePath = 'http://localhost:'+port+'/'+process.env.AZURE_STORAGE_ACCOUNT+'/images/';
+}
+
+
 var app = express.createServer();	
 
 // Configuration
@@ -51,7 +65,7 @@ app.get('/?', function(req, res, next) {
 });
 
 app.get('/getBlobStoragePath', function(req, res, next) {
-	editor.getBlobStoragePath(req, res);
+	res.json({ blobPath: blobStoragePath });
 });
 
 app.get('/:docName', function(req, res, next) {
