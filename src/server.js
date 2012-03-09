@@ -8,19 +8,13 @@ if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_A
 	throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
 }
 
-var	blobStoragePath = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
+var	blobStoragePath = '';
 var	tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
-
-if(process.env.EMULATED == undefined) {
-	process.env.EMULATED = false;
-} 
-
 var port = process.env.port || 8081;
 
-if(process.env.EMULATED == true) {
-	blobStoragePath = 'http://localhost:'+port+'/'+process.env.AZURE_STORAGE_ACCOUNT+'/images/';
-}
-
+if(process.env.EMULATED == undefined) {
+	process.env.EMULATED = 'false';
+} 
 
 var app = express.createServer();	
 
@@ -65,6 +59,13 @@ app.get('/?', function(req, res, next) {
 });
 
 app.get('/getBlobStoragePath', function(req, res, next) {
+	if(process.env.EMULATED == 'true') {
+		blobStoragePath = 'http://127.0.0.1:10000/devstoreaccount1/images/';
+	}
+	else {
+		blobStoragePath = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
+	}
+
 	res.json({ blobPath: blobStoragePath });
 });
 
