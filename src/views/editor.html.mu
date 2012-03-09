@@ -344,10 +344,6 @@
 				url : '../openBlob', 
 				dataType : 'json',
 				success : function (response) {
-					if (response.errorMessage != null){
-						alert(response.errorMessage);
-					}
-					
 					window.location = response.url;
 				},
 			});

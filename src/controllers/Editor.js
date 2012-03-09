@@ -91,7 +91,6 @@ Editor.prototype = {
 						});	
 					}
 					else{
-						data.errorMessage = err;
 						res.json(data);
 					}
 				});
