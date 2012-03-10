@@ -312,7 +312,7 @@ if (!Function.prototype.bind) {
         // 1. Let Target be the this value.
         var target = this;
         // 2. If IsCallable(Target) is false, throw a TypeError exception.
-        if (typeof target != "function")
+        if ((typeof target != "function") || (!!target && target.constructor == Function))
             throw new TypeError(); // TODO message
         // 3. Let A be a new (possibly empty) internal list of all of the
         //   argument values provided after thisArg (arg1, arg2 etc), in order.
