@@ -7,9 +7,8 @@ if "%EMULATED%"=="true" exit /b 0
 powershell -c "set-executionpolicy unrestricted"
 powershell .\download.ps1 "http://npmjs.org/dist/npm-1.1.4.zip"
 
-7za x npm-1.1.4.zip -y >> npmlog.txt
-cd ..
-npm install >> npmlog.txt
+7za x npm-1.1.4.zip -y -obin 1>> npmlog.txt 2>> npmlogerr.txt
+bin\npm install 1>> npmlog.txt 2>> npmlogerr.txt
 
 echo SUCCESS
 exit /b 0

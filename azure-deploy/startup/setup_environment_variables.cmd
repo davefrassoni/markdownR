@@ -11,12 +11,6 @@ set powerShellDir=%WINDIR%\system32\windowspowershell\v1.0
 ECHO Setting the Environment variables..
 CALL %powerShellDir%\powershell.exe -Command Set-ExecutionPolicy unrestricted
 CALL %powerShellDir%\powershell.exe -Command "& .\set_azure_role_information.ps1"
-ECHO Done!
 
-ECHO Restarting IIS..
-CALL iisreset
-ECHO Done!
-
-ECHO Starting the W3SVC service..
-CALL NET START W3SVC
-ECHO Done!
+echo SUCCESS
+exit /b 0

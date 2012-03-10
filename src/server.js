@@ -6,8 +6,10 @@ var express = require('express'),
 // for development purposes only, we use the "TEMP/" path and emulated in true
 // TODO: we should not need a temp path
 var tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
-process.env.EMULATED = !(process.env.AZURE_STORAGE_ACCOUNT);
 var port = process.env.port || 8081;
+console.log('AZURE_STORAGE_ACCOUNT', process.env.AZURE_STORAGE_ACCOUNT);
+console.log('EMULATED', process.env.EMULATED);
+
 var app = express.createServer();	
 
 // Configuration

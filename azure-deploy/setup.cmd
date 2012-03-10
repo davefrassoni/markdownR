@@ -1,4 +1,5 @@
 xcopy /E ..\src .\markdown-worker\
+del .\markdown-worker\TEMP /S /F /Q
 copy ..\package.json .\markdown-worker\
 xcopy /E .\startup .\markdown-worker\
 
