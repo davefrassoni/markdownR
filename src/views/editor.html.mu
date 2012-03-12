@@ -42,8 +42,8 @@
 				<input id="openFileInput" name="openFileInput" type="file" />
 			</div>
 			<div class="modal-footer">
-			  <input id="openFileButton" class="btn primary submit" type="submit" value="Ok" />
-			  <button id="closeFileButton" class="btn secondary">Close</button>
+			  <input id="openFileButton" class="btn primary submit openModal" type="submit" value="Ok" />
+			  <button id="closeFileButton" class="btn secondary closeModal">Close</button>
 			</div>
 		</form>
 	  </div>
@@ -59,8 +59,8 @@
 			<input type="text" id="blobSelected" name="blobSelected" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		  </div>
 		  <div class="modal-footer">
-			<input id="openBlobButton" class="btn primary submit" type="submit" value="Ok" />
-			<button id="closeOpenBlobButton" class="btn secondary">Close</button>
+			<input id="openBlobButton" class="btn primary submit openModal" type="submit" value="Ok" />
+			<button id="closeOpenBlobButton" class="btn secondary closeModal">Close</button>
 		  </div>
 	  </form>
     </div>
@@ -76,8 +76,8 @@
 			<input type="text" id="githubFileSelected" name="githubFileSelected" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		  </div>
 		  <div class="modal-footer">
-			<input id="openGithubButton" class="btn primary submit" type="submit" value="Ok" />
-			<button id="closeOpenGithubButton" class="btn secondary">Close</button>
+			<input id="openGithubButton" class="btn primary submit openModal" type="submit" value="Ok" />
+			<button id="closeOpenGithubButton" class="btn secondary closeModal">Close</button>
 		  </div>
 	  </form>
     </div>
@@ -93,8 +93,8 @@
 			<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		</div>
 		<div class="modal-footer">
-			<input id="saveToBlobButton" class="btn primary submit" type="submit" value="Ok" />
-			<button id="closeSaveToBlobButton" class="btn secondary">Close</button>
+			<input id="saveToBlobButton" class="btn primary submit openModal" type="submit" value="Ok" />
+			<button id="closeSaveToBlobButton" class="btn secondary closeModal">Close</button>
 	    </div>
 	  </form>
     </div>
@@ -110,25 +110,27 @@
 			<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		</div>
 		<div class="modal-footer">
-			<input id="saveToGithubButton" class="btn primary submit" type="submit" value="Ok" />
-			<button id="closeSaveToGithubButton" class="btn secondary">Close</button>
+			<input id="saveToGithubButton" class="btn primary submit openModal" type="submit" value="Ok" />
+			<button id="closeSaveToGithubButton" class="btn secondary closeModal">Close</button>
 	    </div>
 	  </form>
     </div>
     <div id="modal-settings" class="modal hide fade">
-      <div class="modal-header">
-        <a href="#" class="close">&times;</a>
-        <h3>Settings</h3>
-      </div>
-      <div class="modal-body">
-        <p>Settings</p>
-      </div>
-      <div class="modal-footer">
-        <button id="openSettingsButton" class="btn primary">Ok</button>
-        <button id="closeSettingsButton" class="btn secondary">Cancel</button>
-      </div>
+		<form id="saveSettingsForm" action="../saveSettings" method="post">
+			<div class="modal-header">
+				<a href="#" class="close">&times;</a>
+				<h3>Settings</h3>
+			</div>
+			<div class="modal-body">
+				<p>Settings</p>
+				</div>
+				<div class="modal-footer">
+					<input id="openSettingsButton" class="btn primary openModal" value="Ok" />
+					<button id="closeSettingsButton" class="btn secondary closeModal">Cancel</button>
+				</div>
+			</div>
+		</form>
     </div>
-  </div>
     <div class="topbar-wrapper">
       <div class="topbar">
         <div class="topbar-inner">
@@ -265,47 +267,19 @@
 				}
 			});
 			
-			// click events
-			$('#openFileButton').click(function() {
-			  if ($('#openFileForm').valid())
-				$('#modal-openFromFile').modal('hide');  
+			$('#saveSettingsForm').validate({}); // TODO: add validation for settings
+			
+			// open event
+			$('.openModal').click(function() {
+				var form = $(this).closest(form);
+				if (form.valid()){
+					$(this).closest('.modal').modal('hide');
+				}				
 			});
-			$('#closeFileButton').click(function() {
-			  $('#modal-openFromFile').modal('hide');
-			});
-			$('#openBlobButton').click(function() {
-			  if ($('#openBlobForm').valid()) 
-				$('#modal-openFromBlob').modal('hide');  
-			});
-			$('#closeOpenBlobButton').click(function() {
-			  $('#modal-openFromBlob').modal('hide');
-			});
-			$('#saveToBlobButton').click(function() {
-			  if ($('#saveToBlobForm').valid()) 
-				$('#modal-saveToBlob').modal('hide');  
-			});
-			$('#closeSaveToBlobButton').click(function() {
-			  $('#modal-saveToBlob').modal('hide');
-			});
-			$('#openGithubButton').click(function() {
-			  if ($('#openGithubForm').valid()) 
-				$('#modal-openFromGithub').modal('hide');  
-			});
-			$('#closeOpenGithubButton').click(function() {
-			  $('#modal-openFromGithub').modal('hide');
-			});
-			$('#saveToGithubButton').click(function() {
-			  if ($('#saveToGithubForm').valid()) 
-				$('#modal-saveToGithub').modal('hide');  
-			});
-			$('#closeSaveToGithubButton').click(function() {
-			  $('#modal-saveToGithub').modal('hide');
-			});
-			$('#openSettingsButton').click(function() {
-			  $('#modal-settings').modal('hide');
-			});
-			$('#closeSettingsButton').click(function() {
-			  $('#modal-settings').modal('hide');
+			
+			// close event
+			$('.closeModal').click(function() {
+				$(this).closest('.modal').modal('hide');
 			});
 			
 			// bindings
