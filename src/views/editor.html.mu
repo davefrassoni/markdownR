@@ -152,6 +152,7 @@
               </li>
               <li><a id='openPreviewButton' href='../preview/{{{docName}}}'>Preview</a></li>
               <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
+              <li><a href="/logout">{{user}}</a></li>
             </ul>
           </div>
         </div>

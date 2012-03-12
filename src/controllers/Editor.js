@@ -32,12 +32,17 @@ function addRootInPath(root, collection){
 
 Editor.prototype = {
 
+	setUser: function(userName) {
+		this.userName = userName;	
+	},
+
 	render: function(content, docName, res) {
 		var markdown = (new Showdown()).makeHtml(content);
 		var data = {
 			content: content,
 			markdown: markdown,
-			docName: docName
+			docName: docName,
+			user: this.userName
 		}
 		var html = Mustache.to_html(template, data);
 		res.writeHead(200, {'content-type': 'text/html'});
