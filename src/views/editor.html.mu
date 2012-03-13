@@ -136,7 +136,8 @@
         <div class="topbar-inner">
           <div class="container" style="width:100%">
             <ul class="nav" style="float:right;">
-              <li class="dropdown" data-dropdown="dropdown" >
+              <li><a><span id="status" class="label warning">Loading..</span></a></li>
+			  <li class="dropdown" data-dropdown="dropdown" >
                 <a href="#" class="dropdown-toggle">Open</a>
                 <ul class="dropdown-menu">
                   <li><a href="#" data-controls-modal="modal-openFromFile" data-backdrop="true" data-keyboard="true">From File System</a></li>
@@ -169,16 +170,26 @@
 </div>
 	<script>
 		$(document).ready(function() {
-		  var converter = new Showdown.converter();
-		  var view = document.getElementById('view');
+			var converter = new Showdown.converter();
+			var view = document.getElementById('view');
 
-		  var editor = ace.edit("editor");
-		  editor.setReadOnly(true);
-		  editor.session.setUseWrapMode(true);
-		  editor.setShowPrintMargin(false);
+			var editor = ace.edit("editor");
+			editor.setReadOnly(true);
+			editor.session.setUseWrapMode(true);
+			editor.setShowPrintMargin(false);
 
-		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/channel');
-
+			var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/channel');
+			
+			var status = $('#status');
+			connection.on('ok', function() {
+				status.attr('class','label success');
+				status.text('Online');
+			});
+			connection.on('disconnected', function() {
+				status.attr('class','label important');
+				status.text('Offline');
+			});
+			
 			connection.open('{{{docName}}}', function(error, doc) {
 				if (error) {
 				  console.error(error);
