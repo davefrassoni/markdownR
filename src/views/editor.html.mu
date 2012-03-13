@@ -19,7 +19,7 @@
 	<!-- editor -->
 	<script type="text/javascript" src="markdown/showdown.js"></script>
     <script type="text/javascript" src="ace/ace.js"></script>
-    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="channel/bcsocket.js"></script>
     <script type="text/javascript" src="share/share.js"></script>
     <script type="text/javascript" src="share/ace.js"></script>
     <script type="text/javascript" src="ace/theme-textmate.js"></script>
@@ -177,7 +177,7 @@
 		  editor.session.setUseWrapMode(true);
 		  editor.setShowPrintMargin(false);
 
-		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/sjs');
+		  var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/channel');
 
 			connection.open('{{{docName}}}', function(error, doc) {
 				if (error) {
