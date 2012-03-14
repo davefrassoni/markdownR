@@ -1,8 +1,10 @@
 # MarkdownR 
 
-### Prerequisites ###
+#### Prerequisites ####
 * [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a)
-* Windows 7 (Windows 8 still not supported)
+* Windows 7 (not tested in Windows 8)
+
+#### Setup Instructions ####
 
 To run this application first install the modules by typing `npm install` in a console.
 
@@ -16,5 +18,3 @@ By default the code will use the development storage but if you are on a Mac or 
 * AZURE_STORAGE_ACCESS_KEY: key
 
 If you want to deploy to Windows Azure use publish.cmd on azure-deploy which will copy the src folder in there and generate a cspkg and publish to your account.
-
-
