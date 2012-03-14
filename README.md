@@ -29,7 +29,7 @@ If you want to deploy to Windows Azure use `publish.cmd` on azure-deploy which w
 If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the storage URL pointing to a real Azure Blob Storage account. To do this you also need to set the following environment variables:
 
 * AZURE_STORAGE_IMAGECONTAINER: This variable should store an Azure Blob Storage container name used for storing uploaded images when doing copy/paste in Chrome.
-* 
+
 * AZURE_STORAGE_ACCOUNT: Name of the account.
-* 
+
 * AZURE_STORAGE_ACCESS_KEY: Account key.
