@@ -1,20 +1,32 @@
 # MarkdownR 
 
-#### Prerequisites ####
-* [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a)
-* Windows 7 (not tested in Windows 8)
+#### Running MarkdownR in 60 Seconds (using Windows Azure PowerShell Console) ####
 
-#### Setup Instructions ####
+1. Make sure you've installed [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a).
 
-To run this application first install the modules by typing `npm install` in a console.
+2. Open Windows Azure PowerShell for Node.js Console.
 
-You will have to set the following env variables
+3. CD to the project root folder.
 
-* AZURE_STORAGE_IMAGECONTAINER: this is the container name in blob storage where images will be uploaded when doing copy paste in Chrome
+4. Install the project modules by running `npm install` in the PowerShell console.
 
-By default the code will use the development storage but if you are on a Mac or Cloud9 you might need to setup the storage account pointing to a real blob storage
+5. Set the `EMULATED` environment variable to true to use Windows Azure development storage. To set the value, type the following command in the PowerShell console:
+    `[Environment]::SetEnvironmentVariable("EMULATED", "true", "User")`
+    
+6. CD to the `src` folder.
 
-* AZURE_STORAGE_ACCOUNT: name of the account
-* AZURE_STORAGE_ACCESS_KEY: key
+7. Start Windows Azure Storage emulator.
 
-If you want to deploy to Windows Azure use publish.cmd on azure-deploy which will copy the src folder in there and generate a cspkg and publish to your account.
+8. Start the application by running `node server.js`.
+
+9. Browse to `http://localhost:8081` and start markdowning!
+
+
+#### Deploying MarkdownR to Windows Azure ####
+If you want to deploy to Windows Azure use `publish.cmd` on azure-deploy which will copy the src folder in there, generate a cspkg and publish to your account.
+
+#### Runing MarkdownR without the Compute Emulator ####
+If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the storage URL pointing to a real Azure Blob Storage account. To do this you also need to set the following environment variables:
+* AZURE_STORAGE_IMAGECONTAINER: This variable should store an Azure Blob Storage container name used for storing uploaded images when doing copy/paste in Chrome.
+* AZURE_STORAGE_ACCOUNT: name of the account.
+* AZURE_STORAGE_ACCESS_KEY: account key.
