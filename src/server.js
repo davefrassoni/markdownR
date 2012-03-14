@@ -122,7 +122,10 @@ app.post('/pasteimage', function(req, res) {
 });
 
 var options = {
-  db: {type: 'none'},
+  db: {
+		type: 'couchdb',
+		uri: '[YOUR-COUCHDB-SERVICE-URI]'
+  },
   port: port
 };
 
