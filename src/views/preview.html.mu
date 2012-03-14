@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="/Site.css">
     <link rel="stylesheet" type="text/css" href="/bootstrap/bootstrap.min.css">
   </head>
-  <body>
+  <body class="preview">
 {{{markdown}}}
 </body>
 </html>

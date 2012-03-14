@@ -2,6 +2,10 @@ body {
 	overflow: hidden;
 }
 
+body.preview{
+	padding: 15px;
+}
+
 form{
 	height: 1px;
 }
