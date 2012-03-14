@@ -90,7 +90,7 @@
 		<div id="saveToBlobContainer" class="modal-body">
 			<p>Select a folder:</p>
 			<div id="saveToBlobTreeContainer" class="treeContainer" >Loading..</div>
-			<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
+			<input type="text" id="saveToBlobInfo" name="saveToBlobInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		</div>
 		<div class="modal-footer">
 			<input id="saveToBlobButton" class="btn primary submit openModal" type="submit" value="Ok" />
@@ -107,7 +107,7 @@
 		<div id="saveToGithubContainer" class="modal-body">
 			<p>Select a folder:</p>
 			<div id="saveToGithubTreeContainer" class="treeContainer" >Loading..</div>
-			<input type="text" id="saveInfo" name="saveInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
+			<input type="text" id="saveToGithubInfo" name="saveToGithubInfo" class="required" style="visibility:hidden;height:0px; padding: 0;" />
 		</div>
 		<div class="modal-footer">
 			<input id="saveToGithubButton" class="btn primary submit openModal" type="submit" value="Ok" />
@@ -241,12 +241,12 @@
 			
 			$('#saveToBlobForm').validate({
 				rules:{
-					saveInfo: {
+					saveToBlobInfo: {
 					  required: true
 					}
 				},
 				messages: {
-					saveInfo: {
+					saveToBlobInfo: {
 						required: "You have to select a folder"
 					}
 				}
@@ -267,12 +267,12 @@
 			
 			$('#saveToGithubForm').validate({
 				rules:{
-					saveInfo: {
+					saveToGithubInfo: {
 					  required: true
 					}
 				},
 				messages: {
-					saveInfo: {
+					saveToGithubInfo: {
 						required: "You have to select a folder"
 					}
 				}
@@ -282,7 +282,7 @@
 			
 			// open event
 			$('.openModal').click(function() {
-				var form = $(this).closest(form);
+				var form = $(this).closest('form');
 				if (form.valid()){
 					$(this).closest('.modal').modal('hide');
 				}				
@@ -304,8 +304,8 @@
 					var fullPathArray = file.split('/');
 					var container = fullPathArray.shift();
 					var blobName = fullPathArray.toString().replace(/,/g,'/') + '{{{docName}}}'  + '.markdown';
-					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName  };
-					$("#saveInfo").val(JSON.stringify(saveInfo));
+					saveToBlobInfo = { 'documentName': '{{{docName}}}', 'container': container, 'blobName': blobName  };
+					$("#saveToBlobInfo").val(JSON.stringify(saveToBlobInfo));
 				});
 			});
 			
@@ -319,8 +319,8 @@
 					var fullPathArray = file.split('/');
 					var container = fullPathArray.shift();
 					var githubFileName = fullPathArray.toString().replace(/,/g,'/') + '{{{docName}}}'  + '.markdown';
-					saveInfo = { 'documentName': '{{{docName}}}', 'container': container, 'githubFileName': githubFileName  };
-					$("#saveInfo").val(JSON.stringify(saveInfo));
+					saveToGithubInfo = { 'documentName': '{{{docName}}}', 'container': container, 'githubFileName': githubFileName  };
+					$("#saveToGithubInfo").val(JSON.stringify(saveToGithubInfo));
 				});
 			});
 			
@@ -331,7 +331,7 @@
 				success : function (response) {
 					window.location = response.url;
 				},
-			});
+			});		
 		});
     </script>
   </body>

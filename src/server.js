@@ -3,18 +3,21 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
-	console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
-	throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+if(process.env.EMULATED == false) {
+	if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
+		console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+		throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+	}	
+}
+else{
+	process.env.EMULATED = true;
 }
 
 var	blobStoragePath = '';
 var	tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
 var port = process.env.port || 8081;
 
-if(process.env.EMULATED == undefined) {
-	process.env.EMULATED = 'false';
-} 
+
 
 var app = express.createServer();	
 
@@ -98,7 +101,7 @@ app.get('/preview/:docName', function(req, res) {
 });
 
 app.post('/saveToBlob', function(req, res) {
-	var saveInfo = JSON.parse(req.body.saveInfo);
+	var saveInfo = JSON.parse(req.body.saveToBlobInfo);
 	editor.saveDocumentToBlob(saveInfo.documentName, saveInfo.container, saveInfo.blobName, app.model, res);
 });	
 
