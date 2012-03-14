@@ -16,3 +16,5 @@ By default the code will use the development storage but if you are on a Mac or 
 * AZURE_STORAGE_ACCESS_KEY: key
 
 If you want to deploy to Windows Azure use publish.cmd on azure-deploy which will copy the src folder in there and generate a cspkg and publish to your account.
+
+
