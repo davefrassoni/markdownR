@@ -1,5 +1,9 @@
 # MarkdownR 
 
+### Prerequisites ###
+* [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a)
+* Windows 7 (Windows 8 still not supported)
+
 To run this application first install the modules by typing `npm install` in a console.
 
 You will have to set the following env variables
