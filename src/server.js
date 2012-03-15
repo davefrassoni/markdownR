@@ -3,9 +3,6 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-process.env.EMULATED = true;
-process.env.COUCHDB_SERVICE_URI = 
-	
 if(process.env.EMULATED == undefined || process.env.EMULATED == false) {
 	if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
 		console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
@@ -127,7 +124,7 @@ if (process.env.COUCHDB_SERVICE_URI){
 }
 
 var options = {
-  db: dbSettings
+  db: dbSettings,
   port: port
 };
 
