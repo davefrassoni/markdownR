@@ -3,14 +3,12 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-if(process.env.EMULATED == false) {
-	if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
-		console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
-		throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
-	}	
-}
+if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
+	console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+	throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
+}	
 else{
-	process.env.EMULATED = true;
+	process.env.EMULATED = false;
 }
 
 var	blobStoragePath = '';
@@ -121,11 +119,13 @@ app.post('/pasteimage', function(req, res) {
     editor.saveStreamToBlob(fileName, dataURL, app.model, res);
 });
 
+var dbSettings = { type: 'none' };
+if (process.env.COUCHDB_SERVICE_URI){
+	dbSettings = { type: 'couchdb', uri: process.env.COUCHDB_SERVICE_URI };
+}
+
 var options = {
-  db: {
-		type: 'couchdb',
-		uri: '[YOUR-COUCHDB-SERVICE-URI]'
-  },
+  db: dbSettings,
   port: port
 };
 
