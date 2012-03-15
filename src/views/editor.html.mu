@@ -178,7 +178,7 @@
 			editor.session.setUseWrapMode(true);
 			editor.setShowPrintMargin(false);
 
-			var connection = new sharejs.Connection('http://' + window.location.hostname + ':' + window.location.port + '/channel');
+			var connection = new sharejs.Connection('/channel');
 			
 			var status = $('#status');
 			connection.on('ok', function() {
