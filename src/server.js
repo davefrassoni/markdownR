@@ -124,14 +124,11 @@ if (process.env.COUCHDB_SERVICE_URI){
 }
 
 var options = {
-<<<<<<< HEAD
   db: dbSettings,
-=======
   db: {
 		type: 'couchdb',
 		uri: process.env.COUCHDB_URL
   },
->>>>>>> 4cb7241292e2b167159b96bfaa2d1c0d7b0a83ba
   port: port
 };
 
