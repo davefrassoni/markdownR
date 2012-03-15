@@ -3,7 +3,7 @@ var express = require('express'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs');
 
-if(process.env.EMULATED == false) {
+if(process.env.EMULATED == undefined || process.env.EMULATED == false) {
 	if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
 		console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
 		throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
@@ -124,7 +124,7 @@ app.post('/pasteimage', function(req, res) {
 var options = {
   db: {
 		type: 'couchdb',
-		uri: '[YOUR-COUCHDB-SERVICE-URI]'
+		uri: process.env.COUCHDB_URL
   },
   port: port
 };
