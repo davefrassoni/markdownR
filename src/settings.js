@@ -19,7 +19,8 @@ function getBlobStorage(){
 	var blobPath = '';
 	var blobStorageInfoMessage = '';
 	
-	if(process.env.EMULATED == undefined || process.env.EMULATED == false) {
+	// by default, we use the local emulator
+	if(process.env.EMULATED != undefined && !process.env.EMULATED) {
 		if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
 			var errorMessage = 'You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables in the web.config file';
 			errorMessage += '.\nIf you want to run the application in the local emulator, set EMULATED to true in the web.config';
@@ -30,6 +31,7 @@ function getBlobStorage(){
 			blobStorageInfoMessage = blobPath;
 		}
 	}else{
+		process.env.EMULATED = true;
 		blobPath = 'http://127.0.0.1:10000/devstoreaccount1/images/'
 		blobStorageInfoMessage = 'running in the local emulator';
 	}
