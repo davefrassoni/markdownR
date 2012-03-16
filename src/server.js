@@ -2,9 +2,9 @@ var express = require('express'),
 	sharejs = require('share'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs'),
-	Settings = require('./settings.js');
-	
-var everyauth = require('everyauth');
+	Settings = require('./settings.js'),
+	everyauth = require('everyauth');
+
 everyauth.debug = false;  // true= if you want to see the output of the steps
 
 everyauth.azureacs
@@ -143,7 +143,6 @@ app.post('/pasteimage', function(req, res) {
 });
 
 // Start sharejs and the app
-var options = { db: { type: 'none'}, port: 8081};
 sharejs.server.attach(app, settings.options);
 app.listen(settings.options.port);
 
