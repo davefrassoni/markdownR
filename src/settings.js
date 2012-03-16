@@ -27,7 +27,7 @@ function getBlobStorage(){
 			throw new Error(errorMessage);
 		}else{
 			blobPath = 'http://' + process.env.AZURE_STORAGE_ACCOUNT + '.blob.core.windows.net/images/';
-			blobStorageInfoMessage = 'http://' + process.env.AZURE_STORAGE_ACCOUNT;
+			blobStorageInfoMessage = 'http://' + process.env.AZURE_STORAGE_ACCOUNT + '.blob.core.windows.net';
 		}
 	}else{
 		blobPath = 'http://127.0.0.1:10000/devstoreaccount1/images/'
