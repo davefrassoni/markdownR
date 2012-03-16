@@ -4,6 +4,25 @@ var express = require('express'),
 	fs = require('fs'),
 	Settings = require('./settings.js');
 	
+var everyauth = require('everyauth');
+everyauth.debug = false;  // true= if you want to see the output of the steps
+
+everyauth.azureacs
+  .identityProviderUrl(process.env.IDENTITY_PROVIDER_URL)
+  .entryPath('/auth/azureacs')
+  .callbackPath('/auth/azureacs/callback')
+  .signingKey(process.env.ACS_SIGNING_KEY)
+  .realm(process.env.REALM)
+  .homeRealm(process.env.HOMEREALM || '') // if you want to use a default idp (like google/liveid)
+  .tokenFormat('swt')  // only swt supported for now
+  .findOrCreateUser( function (session, acsUser) {
+     // you could enrich the "user" entity by storing/fetching the user from a db
+    return null;
+  })
+  .redirectPath('/');
+
+everyauth.everymodule.logoutRedirectPath('/bye');
+
 var app = express.createServer();	
 var settings = new Settings();
 
@@ -17,8 +36,13 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "markdownr editor" }));
+  app.use(everyauth.middleware());
+  app.use(denyAnonymous(['/bye']));  // deny anonymous users to all routes
+
   app.use(app.router);
 });
+
+everyauth.helpExpress(app);
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
@@ -28,6 +52,29 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+// deny anonymous middleware
+function denyAnonymous(exclude) {
+	return function(req, res, next) {
+	    if (exclude && exclude.indexOf(req.url) >= 0)
+	    	next();
+	    else {
+	    	if (typeof(req.session.auth) == 'undefined' || !req.session.auth.loggedIn) {
+		    	res.cookie('originalurl', req.url);
+		    	res.redirect('/auth/azureacs');
+		    	res.end();
+		    } else {
+		    	var originalUrl = req.cookies.originalurl;
+		    	if (originalUrl !== null && originalUrl !== '') {
+		    		res.cookie('originalurl', '');
+		    		res.redirect(originalUrl);
+		    	} else {
+		    		next();	    		
+		    	}
+		    }	
+	    } 
+  	}
+}
+
 // Routes
 var editor = new Editor(settings.tempStorePath);
 
@@ -35,11 +82,18 @@ app.get('/?', function(req, res, next) {
 	res.redirect('/new');
 });
 
+app.get('/bye', function(req, res, next) {
+	res.writeHead(200, {'Content-Type': 'text/plain' });
+	res.end('Thanks for using MarkdownR.');
+});
+
 app.get('/getBlobStoragePath', function(req, res, next) {
 	res.json({ blobPath: settings.blobStoragePath });
 });
 
 app.get('/:docName', function(req, res, next) {
+	var userName = req.session.auth.azureacs.user.azureacs['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+	editor.setUser(userName);
 	var docName = req.params.docName;
 	editor.openDocument(docName, app.model, res, next);
 });
