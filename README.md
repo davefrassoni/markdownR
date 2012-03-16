@@ -25,7 +25,7 @@ If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the sto
 * AZURE_STORAGE_ACCOUNT: Name of the account.
 * AZURE_STORAGE_ACCESS_KEY: Account key.
 
-### Set up persistence in MarkdownR ###
+### Setting up persistence in MarkdownR ###
 
 You can set up a couchdb service by following these steps:
 
