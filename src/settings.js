@@ -1,9 +1,8 @@
 /*
  * Settings file to configure MarkdownR
  * _ Sets the port (8081 by default)
- * _ Sets the db type: none - coauchdb (none by default)
- * _ Sets the azure storage account (emulated == true by default)
- * TODO: obtain the values from the web.config file (to support 'node server.js')
+ * _ Sets the db type (none by default)
+ * _ Sets the azure storage account
 */
 
 var fs = require('fs');
@@ -57,7 +56,7 @@ function getTempStore(){
 
 function getOptions(){
 	var options = {};
-	var port = 8081; // TODO: change this
+	var port = process.env.PORT || 8081;
 	var dbInfoMessage = '';
 	
 	if (process.env.COUCHDB_SERVICE_URI){
