@@ -3,6 +3,6 @@
   <Role name="markdownr-web">
     <ConfigurationSettings />
     <Instances count="1" />
-    <Certificates /
+    <Certificates />
   </Role>
 </ServiceConfiguration>
