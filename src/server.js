@@ -1,22 +1,11 @@
 var express = require('express'),
 	sharejs = require('share'),
 	Editor = require('./controllers/Editor.js'),
-	fs = require('fs');
-
-if(process.env.EMULATED == undefined || process.env.EMULATED == false) {
-	if(process.env.AZURE_STORAGE_ACCOUNT == undefined || process.env.AZURE_STORAGE_ACCESS_KEY == undefined) {
-		console.log('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
-		throw new Error('You must set up AZURE_STORAGE_ACCESS_KEY and AZURE_STORAGE_ACCOUNT environment variables');
-	}	
-}
-
-var	blobStoragePath = '';
-var	tempPath = process.env.TEMP_STORE_PATH || "TEMP/";
-var port = process.env.port || 8081;
-
-
-
+	fs = require('fs'),
+	Settings = require('./settings.js');
+	
 var app = express.createServer();	
+var settings = new Settings();
 
 // Configuration
 
@@ -39,34 +28,15 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-// Create temp and upload folders, if not exist
-
-fs.stat(tempPath, function(err){
-	if (err){
-		fs.mkdir(tempPath, function(err){
-			if (err)
-				console.log(err);
-		});
-	}
-});
-
 // Routes
-
-var editor = new Editor(tempPath);
+var editor = new Editor(settings.tempStorePath);
 
 app.get('/?', function(req, res, next) {
 	res.redirect('/new');
 });
 
 app.get('/getBlobStoragePath', function(req, res, next) {
-	if(process.env.EMULATED == 'true') {
-		blobStoragePath = 'http://127.0.0.1:10000/devstoreaccount1/images/';
-	}
-	else {
-		blobStoragePath = 'http://'+process.env.AZURE_STORAGE_ACCOUNT+'.blob.core.windows.net/images/';
-	}
-
-	res.json({ blobPath: blobStoragePath });
+	res.json({ blobPath: settings.blobStoragePath });
 });
 
 app.get('/:docName', function(req, res, next) {
@@ -118,20 +88,10 @@ app.post('/pasteimage', function(req, res) {
     editor.saveStreamToBlob(fileName, dataURL, app.model, res);
 });
 
-var dbSettings = { type: 'none' };
-if (process.env.COUCHDB_SERVICE_URI){
-	dbSettings = { type: 'couchdb', uri: process.env.COUCHDB_SERVICE_URI };
-}
-
-var options = {
-  db: dbSettings,
-  port: port
-};
-
-sharejs.server.attach(app, options);
-
-app.listen(options.port);
-console.log("MarkdownR running at http://localhost:" + options.port);
+// Start sharejs and the app
+var options = { db: { type: 'none'}, port: 8081};
+sharejs.server.attach(app, settings.options);
+app.listen(settings.options.port);
 
 process.title = 'markdownr'
 process.on('uncaughtException', function (err) {
