@@ -11,6 +11,7 @@ function Settings(){
 	this.blobStoragePath = getBlobStorage();
 	this.tempStorePath = getTempStore();
 	this.options = getOptions();
+	this.auth = getAuthConfiguration();
 }
 
 module.exports = Settings;
@@ -34,7 +35,7 @@ function getBlobStorage(){
 		blobStorageInfoMessage = 'running in the local emulator';
 	}
 	
-	console.log('	- azure storage: ' + blobStorageInfoMessage);
+	console.log('\t- azure storage: ' + blobStorageInfoMessage);
 	return blobPath;
 }
 
@@ -50,7 +51,7 @@ function getTempStore(){
 			});
 		}
 	});
-	console.log('	- temp path: initialized');
+	console.log('\t- temp path: initialized');
 	return tempPath;
 }
 
@@ -61,13 +62,34 @@ function getOptions(){
 	
 	if (process.env.COUCHDB_SERVICE_URI){
 		options = { db: { type: 'couchdb', uri: process.env.COUCHDB_SERVICE_URI }, port: port };
-		dbInfoMessage = options.db.type + ' @' + options.db.uri;
+		dbInfoMessage = 'running couchdb: ' + options.db.type + ' @' + options.db.uri;
 	}else{
 		options = { db: { type: 'none' }, port: port };
-		dbInfoMessage = options.db.type;
+		dbInfoMessage = 'running in memory';
 	}
 	
-	console.log('	- db: ' + dbInfoMessage);
-	console.log('MarkdownR running at http://localhost:' + options.port);
+	console.log('\t- db: ' + dbInfoMessage);
+	console.log('\t- port: ' + options.port);
 	return options;
+}
+
+function getAuthConfiguration(){
+	var auth = {};
+
+	auth.enabled = process.env.AUTHENTICATION_ENABLED === 'true';
+	console.log('\t- auth.enabled: ' + auth.enabled);
+	
+	if (auth.enabled) {
+		auth.identityProviderUrl = process.env.IDENTITY_PROVIDER_URL || 'https://southworksinc.accesscontrol.windows.net/v2/wsfederation/';
+		auth.homeRealm = process.env.HOMEREALM;
+		auth.realm = process.env.REALM 	|| 'urn:markdownr:8081';
+		auth.signingKey = process.env.ACS_SIGNING_KEY || 'aZHIxqQrfUuyt8fzK96aKO0BxKx7/MNm9CINr6dZ5yY=';
+
+		console.log('\t\t- auth.identityProviderUrl: ' + auth.identityProviderUrl);
+		console.log('\t\t- auth.homeRealm: ' + auth.homeRealm);
+		console.log('\t\t- auth.realm: ' + auth.realm);
+		console.log('\t\t- auth.signingKey: ' + auth.signingKey);
+	}
+	
+	return auth;
 }

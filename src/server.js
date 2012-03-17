@@ -2,29 +2,33 @@ var express = require('express'),
 	sharejs = require('share'),
 	Editor = require('./controllers/Editor.js'),
 	fs = require('fs'),
-	Settings = require('./settings.js'),
-	everyauth = require('everyauth');
+	Settings = require('./settings.js');
 
-everyauth.debug = false;  // true= if you want to see the output of the steps
+var settings = new Settings();
+	
+if (settings.auth.enabled) {
+	var everyauth = require('everyauth');
 
-everyauth.azureacs
-  .identityProviderUrl(process.env.IDENTITY_PROVIDER_URL)
-  .entryPath('/auth/azureacs')
-  .callbackPath('/auth/azureacs/callback')
-  .signingKey(process.env.ACS_SIGNING_KEY)
-  .realm(process.env.REALM)
-  .homeRealm(process.env.HOMEREALM || '') // if you want to use a default idp (like google/liveid)
-  .tokenFormat('swt')  // only swt supported for now
-  .findOrCreateUser( function (session, acsUser) {
-     // you could enrich the "user" entity by storing/fetching the user from a db
-    return null;
-  })
-  .redirectPath('/');
+	everyauth.debug = false;  // true= if you want to see the output of the steps
 
-everyauth.everymodule.logoutRedirectPath('/bye');
+	everyauth.azureacs
+	  .identityProviderUrl(settings.auth.identityProviderUrl)
+	  .entryPath('/auth/azureacs')
+	  .callbackPath('/auth/azureacs/callback')
+	  .signingKey(settings.auth.signingKey)
+	  .realm(settings.auth.realm)
+	  .homeRealm(settings.auth.homeRealm || '') // if you want to use a default idp (like google/liveid)
+	  .tokenFormat('swt')  // only swt supported for now
+	  .findOrCreateUser( function (session, acsUser) {
+	     // you could enrich the "user" entity by storing/fetching the user from a db
+	    return null;
+	  })
+	  .redirectPath('/');
+
+	everyauth.everymodule.logoutRedirectPath('/bye');
+}
 
 var app = express.createServer();	
-var settings = new Settings();
 
 // Configuration
 
@@ -36,13 +40,16 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: "markdownr editor" }));
-  app.use(everyauth.middleware());
-  app.use(denyAnonymous(['/bye']));  // deny anonymous users to all routes
+  
+  if (settings.auth.enabled) {
+	app.use(everyauth.middleware());
+	app.use(denyAnonymous(['/bye']));  // deny anonymous users to all routes
+	everyauth.helpExpress(app);
+  }
 
   app.use(app.router);
 });
 
-everyauth.helpExpress(app);
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
@@ -92,8 +99,12 @@ app.get('/getBlobStoragePath', function(req, res, next) {
 });
 
 app.get('/:docName', function(req, res, next) {
-	var userName = req.session.auth.azureacs.user.azureacs['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
-	editor.setUser(userName);
+	if (settings.auth.enabled) {
+		var userName = req.session.auth.azureacs.user.azureacs['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+		console.log(userName)
+		editor.setUser(userName);
+	}
+
 	var docName = req.params.docName;
 	editor.openDocument(docName, app.model, res, next);
 });

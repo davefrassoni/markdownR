@@ -42,7 +42,8 @@ Editor.prototype = {
 			content: content,
 			markdown: markdown,
 			docName: docName,
-			user: this.userName
+			user: this.userName,
+			isUserSet: this.userName !== undefined
 		}
 		var html = Mustache.to_html(template, data);
 		res.writeHead(200, {'content-type': 'text/html'});
