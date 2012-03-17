@@ -1,9 +1,10 @@
+SET CONFIG=%1
 xcopy /E /Y ..\src .\markdownr-web\
 del .\markdownr-web\temp /S /F /Q
 copy ..\package.json .\markdownr-web\
 
-IF EXIST Web.swmarkdownr.config (
-	xcopy /Y Web.swmarkdownr.config .\markdownr-web\Web.cloud.config
+IF EXIST Web.%CONFIG%.config (
+	xcopy /Y Web.%CONFIG%.config .\markdownr-web\Web.cloud.config
 )
 
 xcopy /E /Y .\startup .\markdownr-web\bin\

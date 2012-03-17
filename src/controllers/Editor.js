@@ -123,7 +123,7 @@ Editor.prototype = {
 			if (!err){
 				self.blobService.uploadTextToBlob(container, blobPath, data.snapshot, function(err, result){
 					if(!err)
-						res.redirect(docName);
+						res.redirect('/' + docName);
 					else
 						console.log(err);
 						
