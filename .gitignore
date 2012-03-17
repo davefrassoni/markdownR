@@ -1,8 +1,9 @@
 /node_modules
 /azure-deploy/local_package.csx
 /azure-deploy/markdownr-web
-
-/azure-deploy/startup/*.prod.ps1
+/azure-deploy/*.config
+/azure-deploy/*.cscfg
+/azure-deploy/*.csdef
 *.publishsettings
 *.cspkg
 /src/TEMP

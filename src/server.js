@@ -66,13 +66,13 @@ function denyAnonymous(exclude) {
 	    	next();
 	    else {
 	    	if (typeof(req.session.auth) == 'undefined' || !req.session.auth.loggedIn) {
-		    	res.cookie('originalurl', req.url);
+		    	req.session.originalurl = req.url;
 		    	res.redirect('/auth/azureacs');
 		    	res.end();
 		    } else {
-		    	var originalUrl = req.cookies.originalurl;
+		    	var originalUrl = req.session.originalurl;
 		    	if (originalUrl !== null && originalUrl !== '') {
-		    		res.cookie('originalurl', '');
+		    		req.session.originalurl = '';
 		    		res.redirect(originalUrl);
 		    	} else {
 		    		next();	    		
