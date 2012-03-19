@@ -116,22 +116,6 @@
 	    </div>
 	  </form>
     </div>
-    <div id="modal-settings" class="modal hide fade">
-		<form id="saveSettingsForm" action="../saveSettings" method="post">
-			<div class="modal-header">
-				<a href="#" class="close">&times;</a>
-				<h3>Settings</h3>
-			</div>
-			<div class="modal-body">
-				<p>Settings</p>
-				</div>
-				<div class="modal-footer">
-					<input id="openSettingsButton" class="btn primary openModal" value="Ok" />
-					<button id="closeSettingsButton" class="btn secondary closeModal">Cancel</button>
-				</div>
-			</div>
-		</form>
-    </div>
     <div class="topbar-wrapper">
       <div class="topbar">
         <div class="topbar-inner">
@@ -155,7 +139,6 @@
                 </ul>
               </li>
               <li><a id='openPreviewButton' href='../preview/{{{docName}}}'>Preview</a></li>
-              <li><a href="#" data-controls-modal="modal-settings" data-backdrop="true" data-keyboard="true">Settings</a></li>
               {{#isUserSet}}
               <li><a href="/logout">{{user}}</a></li>
               {{/isUserSet}}
@@ -281,8 +264,6 @@
 					}
 				}
 			});
-			
-			$('#saveSettingsForm').validate({}); // TODO: add validation for settings
 			
 			// open event
 			$('.openModal').click(function() {
