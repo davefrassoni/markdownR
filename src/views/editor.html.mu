@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+  	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>MarkdownR - {{docName}}</title>
     <script type="text/javascript" src="jquery/jquery-1.6.4.min.js"></script>
     
@@ -33,23 +34,21 @@
   </head>
   <body>
    <div id="modal-newdoc" class="modal hide fade">
+		<div class="modal-header">
+			<a href="#" class="close">&times;</a>
+			<h3>Create New</h3>
+		</div>
 		<form id="newDocForm" method="post">
-			<div class="modal-header">
-				<a href="#" class="close">&times;</a>
-				<h3>Create New</h3>
-			</div>
 			<div class="modal-body">
 				<p>Name</p>
 				<input id="docNameInput" name="docNameInput" type="text" value="doc1" />
-				</div>
-				<div class="modal-footer">
-				  <input id="openDocButton" class="btn primary submit openModal" type="submit" value="Ok" />
-				  <button id="closeNewDocButton" class="btn secondary closeModal">Close</button>
-				</div>
+			</div>
+			<div class="modal-footer">
+			  <input id="openDocButton" class="btn primary submit openModal" type="submit" value="Ok" />
 			</div>
 		</form>
     </div>
-	  <div id="modal-openFromFile" class="modal hide fade">
+  	<div id="modal-openFromFile" class="modal hide fade">
   		<div class="modal-header">
   		  <a href="#" class="close">&times;</a>
   		  <h3>Open File</h3>
@@ -61,10 +60,9 @@
 			</div>
 			<div class="modal-footer">
 			  <input id="openFileButton" class="btn primary submit openModal" type="submit" value="Ok" />
-			  <button id="closeFileButton" class="btn secondary closeModal">Close</button>
 			</div>
 		</form>
-	  </div>
+  	</div>
     <div id="modal-openFromBlob" class="modal hide fade">
       <div class="modal-header">
         <a href="#" class="close">&times;</a>
@@ -78,7 +76,6 @@
 		  </div>
 		  <div class="modal-footer">
 			<input id="openBlobButton" class="btn primary submit openModal" type="submit" value="Ok" />
-			<button id="closeOpenBlobButton" class="btn secondary closeModal">Close</button>
 		  </div>
 	  </form>
     </div>
@@ -95,7 +92,6 @@
 		  </div>
 		  <div class="modal-footer">
 			<input id="openGithubButton" class="btn primary submit openModal" type="submit" value="Ok" />
-			<button id="closeOpenGithubButton" class="btn secondary closeModal">Close</button>
 		  </div>
 	  </form>
     </div>
@@ -112,7 +108,6 @@
 		</div>
 		<div class="modal-footer">
 			<input id="saveToBlobButton" class="btn primary submit openModal" type="submit" value="Ok" />
-			<button id="closeSaveToBlobButton" class="btn secondary closeModal">Close</button>
 	    </div>
 	  </form>
     </div>
@@ -129,7 +124,6 @@
 		</div>
 		<div class="modal-footer">
 			<input id="saveToGithubButton" class="btn primary submit openModal" type="submit" value="Ok" />
-			<button id="closeSaveToGithubButton" class="btn secondary closeModal">Close</button>
 	    </div>
 	  </form>
     </div>
@@ -166,14 +160,13 @@
       </div>
     </div>
     <div class="container-fluid">
-    <div id="viewer" class="sidebar">
-      <div id="view">{{{markdown}}}</div>
-    </div>
-    <div id="editor" class="content">{{{content}}}</div>
-</td>
-    
-</div>
-	<script>
+	    <div id="viewer" class="sidebar">
+	      <div id="view">{{{markdown}}}</div>
+	    </div>
+	    <div id="editor" class="content">{{{content}}}</div>
+	</div>
+
+    <script type="text/javascript">
 		$(document).ready(function() {
 			var converter = new Showdown.converter();
 			var view = document.getElementById('view');
