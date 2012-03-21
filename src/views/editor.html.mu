@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MarkdownR {{name}}</title>
+    <title>MarkdownR - {{docName}}</title>
     <script type="text/javascript" src="jquery/jquery-1.6.4.min.js"></script>
     
 	<!-- bootstrap  -->
@@ -32,6 +32,23 @@
 	<link rel="stylesheet" type="text/css" href="Site.css">
   </head>
   <body>
+   <div id="modal-newdoc" class="modal hide fade">
+		<form id="newDocForm" method="post">
+			<div class="modal-header">
+				<a href="#" class="close">&times;</a>
+				<h3>Create New</h3>
+			</div>
+			<div class="modal-body">
+				<p>Name</p>
+				<input id="docNameInput" name="docNameInput" type="text" value="doc1" />
+				</div>
+				<div class="modal-footer">
+				  <input id="openDocButton" class="btn primary submit openModal" type="submit" value="Ok" />
+				  <button id="closeNewDocButton" class="btn secondary closeModal">Close</button>
+				</div>
+			</div>
+		</form>
+    </div>
 	  <div id="modal-openFromFile" class="modal hide fade">
   		<div class="modal-header">
   		  <a href="#" class="close">&times;</a>
@@ -122,6 +139,7 @@
           <div class="container" style="width:100%">
             <ul class="nav" style="float:right;">
               <li><a><span id="status" class="label warning">Loading..</span></a></li>
+              <li><a id='createNewButton' data-controls-modal="modal-newdoc" data-backdrop="true" data-keyboard="true" href='#'>New Doc</a></li>
 			  <li class="dropdown" data-dropdown="dropdown" >
                 <a href="#" class="dropdown-toggle">Open</a>
                 <ul class="dropdown-menu">
@@ -182,6 +200,7 @@
 				  console.error(error);
 				  return;
 				}
+				
 				doc.attach_ace(editor);
 				editor.setTheme("ace/theme/textmate");
       	  		editor.getSession().setMode(new (require("ace/mode/markdown").Mode)());
@@ -316,7 +335,30 @@
 				success : function (response) {
 					window.location = response.url;
 				},
-			});		
+			});	
+			
+			$('#newDocForm').submit(function() {
+				window.location = slugify($('#docNameInput').val());
+				return false;
+			});
+
+			function slugify(str) {
+			  str = str.replace(/^\s+|\s+$/g, ''); // trim
+			  str = str.toLowerCase();
+			  
+			  // remove accents, swap ñ for n, etc
+			  var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+			  var to   = "aaaaeeeeiiiioooouuuunc------";
+			  for (var i=0, l=from.length ; i<l ; i++) {
+			    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+			  }
+
+			  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+			    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+			    .replace(/-+/g, '-'); // collapse dashes
+
+			  return str;
+			}
 		});
     </script>
 
