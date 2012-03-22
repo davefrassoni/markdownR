@@ -2,6 +2,8 @@
 
 There is a running version at http://markdownr.cloudapp.net
 
+You can run MarkdownR on Mac or Windows. If you don't have Windows Azure storage the Open/Save from Blob Storage feature won't work, but everything else will.
+
 #### Running MarkdownR in 60 Seconds (using Windows Azure PowerShell for Node.js Console) ####
 
 1. Make sure you've installed [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a).
