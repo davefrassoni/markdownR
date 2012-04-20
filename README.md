@@ -1,5 +1,9 @@
 # MarkdownR 
 
+There is a running version at http://markdownr.cloudapp.net
+
+You can run MarkdownR on Mac or Windows. If you don't have Windows Azure storage the Open/Save from Blob Storage feature won't work, but everything else will.
+
 #### Running MarkdownR in 60 Seconds (using Windows Azure PowerShell for Node.js Console) ####
 
 1. Make sure you've installed [Windows Azure SDK for Node JS](http://www.microsoft.com/web/gallery/install.aspx?appid=azurenodepowershell&clcid=0x40a).
@@ -30,6 +34,6 @@ If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the sto
 You can set up a couchdb service by following these steps:
 
 1. Update the COUCHDB_SERVICE_URI setting in the Web.config file with the URI of your couchdb service (such as http://cloudant.com)
-2. If you’re working with a fresh database:
+2. If youï¿½re working with a fresh database:
 	a. Open the \node_modules\share\bin\options.js file and uncomment the couchdb line. Now, fill the `uri` line right below with the same value you used in step 1.
 	b. Open a command prompt and run the following command: `node share\bin\setup_couch`. This will create a _design/sharejs file inside your database.
