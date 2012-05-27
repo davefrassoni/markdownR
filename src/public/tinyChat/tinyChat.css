@@ -1,20 +1,24 @@
 #chat {
-	right:24px;
+	top:0px;
+	right:25px;
 	width:262px;
 	height:100%;
 	position:absolute;
+	font-size:12px;
 	line-height:18px;
 	font-family:tahoma;
-	font-size:12px;
+}
+
+#chat p,
+#chat input {
 	margin:0px;
 	padding:0px;
-
 }
 
 #chatOpener {
 	width:260px;
 	height:30px;
-	bottom:22px;
+	bottom:25px;
 	position:absolute;
 	background:#fb9318;
 	text-align:center;
@@ -23,12 +27,12 @@
 
 #chatToggler {
 	width:260px;
-	height:337px;
-	bottom:22px;
+	height:331px;
+	bottom:25px;
 	position:absolute;
 	background:#fff;
-	display:none;
 	border:solid 1px #000;
+	display:none;
 }
 
 #chatCloser {
@@ -41,23 +45,18 @@
 #chatPeople {
 	width:255px;
 	height:37px;
-	overflow: hidden;
 	border-bottom:solid 1px #ccc;
-	padding-left:5px;
+	overflow: hidden;
+	padding-left: 5px;
 }
 
 #chatContent {
 	width:255px;
-	height:239px;
+	height:240px;
 	background:#fff;
 	overflow: auto;
 	overflow-x: hidden;
-	padding-left:5px;
-}
-
-#chatContent p {
-	line-height:18px;
-	margin-bottom:0px;
+	padding-left: 5px;
 }
 
 #chatNick {
@@ -67,7 +66,7 @@
 }
 
 #chatInput {
-	width:180px;
+	width:192px;
 	height:20px;
 	float:left;
 }

@@ -379,8 +379,8 @@
 			<div id="chatCloser">&darr; click here to hide the chat &darr;</div>
 			<div id="chatPeople"></div>
 			<div id="chatContent"></div>
-			<input type="text" id="chatNick" disabled="disabled" value="guest" />
-			<input type="text" id="chatInput" disabled="disabled" />
+			<input type="text" id="chatNick" disabled="disabled" value="guest" maxlength="32" />
+			<input type="text" id="chatInput" disabled="disabled" maxlength="256" />
 		</div>
 	</div>
   </body>
