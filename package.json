@@ -10,8 +10,10 @@
     "coffee-script": "= 1.1.0",
     "mustache": "= 0.4.0",
     "everyauth": "= 0.2.32",
-	  "azure": "= 0.5.2",
-	  "express": "= 2.5.9"
+	"azure": "= 0.5.2",
+	"express": "= 2.5.9",
+	"socket.io": "= 0.9.6",
+	"sanitizer": "= 0.0.15"
   },
   "engine": "node >= 0.4.7",
   "repository": {

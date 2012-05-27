@@ -29,11 +29,16 @@ If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the sto
 * AZURE_STORAGE_ACCOUNT: Name of the account.
 * AZURE_STORAGE_ACCESS_KEY: Account key.
 
+#### Running MarkdownR with the Compute Emulator ####
+Before running server.js, set the following environment values:
+* set AZURE_STORAGE_ACCOUNT=dummy
+* set AZURE_STORAGE_ACCESS_KEY=dummy
+
 ### Setting up persistence in MarkdownR ###
 
 You can set up a couchdb service by following these steps:
 
 1. Update the COUCHDB_SERVICE_URI setting in the Web.config file with the URI of your couchdb service (such as http://cloudant.com)
-2. If you�re working with a fresh database:
+2. If you're working with a fresh database:
 	a. Open the \node_modules\share\bin\options.js file and uncomment the couchdb line. Now, fill the `uri` line right below with the same value you used in step 1.
 	b. Open a command prompt and run the following command: `node share\bin\setup_couch`. This will create a _design/sharejs file inside your database.

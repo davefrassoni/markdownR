@@ -1,0 +1,87 @@
+#chat {
+	right:24px;
+	width:262px;
+	height:100%;
+	position:absolute;
+	line-height:18px;
+	font-family:tahoma;
+	font-size:12px;
+	margin:0px;
+	padding:0px;
+
+}
+
+#chatOpener {
+	width:260px;
+	height:30px;
+	bottom:22px;
+	position:absolute;
+	background:#fb9318;
+	text-align:center;
+	border:solid 1px #000;
+}
+
+#chatToggler {
+	width:260px;
+	height:337px;
+	bottom:22px;
+	position:absolute;
+	background:#fff;
+	display:none;
+	border:solid 1px #000;
+}
+
+#chatCloser {
+	width:260px;
+	height:30px;
+	background:#fb9318;
+	text-align:center;
+}
+
+#chatPeople {
+	width:255px;
+	height:37px;
+	overflow: hidden;
+	border-bottom:solid 1px #ccc;
+	padding-left:5px;
+}
+
+#chatContent {
+	width:255px;
+	height:239px;
+	background:#fff;
+	overflow: auto;
+	overflow-x: hidden;
+	padding-left:5px;
+}
+
+#chatContent p {
+	line-height:18px;
+	margin-bottom:0px;
+}
+
+#chatNick {
+	width:60px;
+	height:20px;
+	float:left;
+}
+
+#chatInput {
+	width:180px;
+	height:20px;
+	float:left;
+}
+
+#chatContent::-webkit-scrollbar {
+	width: 12px;
+}
+
+#chatContent::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+}
+
+#chatContent::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}

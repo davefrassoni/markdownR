@@ -10,6 +10,12 @@
 	<script type="text/javascript" src="bootstrap/bootstrap-modal.js"></script>
     <script type="text/javascript" src="bootstrap/bootstrap-dropdown.js"></script>
 	
+	<!-- tinyChat -->
+	<link rel="stylesheet" type="text/css" href="tinyChat/tinyChat.css">
+	<script type="text/javascript" src="tinyChat/tinyChat-client.js"></script>
+	<script type="text/javascript" src="jquery/jquery-ui-1.8.20.custom.min.js"></script>
+	<script type="text/javascript" src="socket.io/socket.io.js"></script>
+	
 	<!-- validation -->
 	<script type="text/javascript" src="jquery/jquery.validate-1.9.min.js"></script>
 
@@ -366,6 +372,16 @@
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
 	</script>    
+	
+	<div id="chat">
+		<div id="chatOpener">&uarr; click here to show the chat &uarr;</div>
+		<div id="chatToggler">
+			<div id="chatCloser">&darr; click here to hide the chat &darr;</div>
+			<div id="chatPeople"></div>
+			<div id="chatContent"></div>
+			<input type="text" id="chatNick" disabled="disabled" value="guest" />
+			<input type="text" id="chatInput" disabled="disabled" />
+		</div>
+	</div>
   </body>
-</html>  
-
+</html>
