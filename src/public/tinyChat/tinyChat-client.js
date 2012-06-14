@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var socket = io.connect('http://localhost:8081/');
+	var socket = io.connect('/');
 	
 	var chatOpener = $("#chatOpener");
 	var chatToggler = $("#chatToggler");
