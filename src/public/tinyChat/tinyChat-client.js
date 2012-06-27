@@ -16,6 +16,21 @@ $(document).ready(function() {
 		chatNick.removeAttr('disabled');
 	});
 	
+	chatContent.click(function()
+	{
+		focusInput();
+	});
+	
+	chatPeople.click(function()
+	{
+		focusInput();
+	});
+	
+	function focusInput()
+	{
+		chatInput.focus();
+	}
+	
 	chatInput.keydown(function(e)
 	{
 		if (e.keyCode === 13) {
@@ -98,16 +113,15 @@ $(document).ready(function() {
 	});
 	
 	chatOpener.click(function () {
-		$('#chatToggler').toggle("slide", { direction: "down" }, 1000);
+		chatToggler.toggle("slide", { direction: "down" }, 1000);
 	});
 	
 	chatCloser.click(function () {
-		$('#chatToggler').toggle("slide", { direction: "down" }, 1000);
+		chatToggler.toggle("slide", { direction: "down" }, 1000);
 	});
 	
 	function chatScrollDown()
 	{
-		var objChatContent = document.getElementById("chatContent");
-		objChatContent.scrollTop = objChatContent.scrollHeight;
+		chatContent.scrollTop(chatContent[0].scrollHeight);
 	};
 });
