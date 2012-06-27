@@ -30,7 +30,7 @@ If you are using a Mac or [Cloud9](http://c9.io) you might need to setup the sto
 * AZURE_STORAGE_ACCESS_KEY: Account key.
 
 #### Running MarkdownR with the Compute Emulator ####
-Just run _node server.js_ and browse to _http://localhost:8081/_
+Just run `node server.js` and browse to `http://localhost:8081/`.
 
 ### Setting up persistence in MarkdownR ###
 
